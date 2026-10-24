@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#08090c">
+<title>Sethelion Network | Sethelion Wallet</title>
+<style>
+:root {
+  --bg:#08090c; --panel:#11141a; --panel2:#171b22;
+  --line:#2a3039; --silver:#e4e8ed; --muted:#8d98a7;
+  --neon:#65f5cb; --purple:#9b8aff; --red:#ff7584;
+}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 70% -20%,#19312e 0,transparent 42%),var(--bg);color:var(--silver);font:14px/1.5 system-ui,-apple-system,sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.app{display:grid;grid-template-columns:230px minmax(0,1fr);min-height:100vh}
+aside{padding:28px 18px;border-right:1px solid var(--line);background:#0b0d11}
+.brand{display:flex;align-items:center;gap:11px;margin-bottom:40px}
+.logo-image{width:42px;height:42px;display:block;object-fit:contain;border:1px solid var(--neon);border-radius:12px;box-shadow:0 0 22px #65f5cb18}
+.brand strong{display:block;letter-spacing:1px;font-size:14px}
+.brand small{color:var(--muted);font-size:9px;letter-spacing:2px}
+.navlabel{color:#657080;font-size:10px;letter-spacing:2px;margin:24px 10px 9px}
+.nav{display:flex;gap:12px;align-items:center;width:100%;border:1px solid transparent;background:transparent;color:#a5afbd;padding:12px;border-radius:10px;text-align:left;margin:3px 0}
+.nav:hover,.nav.active{background:#17211f;border-color:#25463e;color:var(--neon)}
+.network{margin-top:36px;padding:14px;border:1px solid var(--line);border-radius:12px;color:var(--muted);font-size:12px}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--neon);margin-right:7px}
+main{padding:30px;max-width:1500px;width:100%;margin:auto}
+.top{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:28px}
+h1{font-size:25px;margin:0;letter-spacing:-.6px}
+h2{font-size:16px;margin:0 0 18px}
+.muted{color:var(--muted)}
+.pill{border:1px solid #35423f;border-radius:30px;padding:8px 12px;color:var(--neon);font-size:12px}
+.grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(250px,1fr);gap:18px}
+.card{background:linear-gradient(145deg,#151920,#0e1116);border:1px solid var(--line);border-radius:17px;padding:22px;min-width:0}
+.hero{position:relative;overflow:hidden;min-height:215px;background:radial-gradient(ellipse at 95% 5%,#244f45 0,transparent 45%),linear-gradient(120deg,#171b21,#101319);border-color:#35453f}
+.hero:after{content:"SN";position:absolute;right:25px;bottom:-46px;font-size:150px;font-weight:900;color:#65f5cb09;pointer-events:none}
+.eyebrow{color:var(--muted);font-size:11px;letter-spacing:1.5px}
+.balance{font-size:clamp(30px,4vw,43px);font-weight:750;letter-spacing:-1.5px;margin:12px 0}
+.positive{color:var(--neon)}
+.address{overflow-wrap:anywhere;color:#b5c0cc;font-size:12px;margin:10px 0}
+.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:22px}
+.btn{border:1px solid #39414b;border-radius:10px;padding:11px 17px;color:#e8edf2;background:#1a1f27}
+.btn.primary{background:var(--neon);border-color:var(--neon);color:#06110e;font-weight:750}
+.btn:hover{filter:brightness(1.12)}
+.stat{display:flex;justify-content:space-between;gap:10px;margin:16px 0}
+.stat strong{font-size:15px}
+.asset{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 0;border-bottom:1px solid var(--line)}
+.asset:last-child{border-bottom:0}
+.coin{display:flex;align-items:center;gap:11px;min-width:0}
+.coinicon{width:37px;height:37px;display:grid;place-items:center;border-radius:50%;background:#222832;color:var(--neon);font-weight:800}
+.coin small{display:block;color:var(--muted)}
+.right{text-align:right;overflow-wrap:anywhere}
+.right strong{display:block}
+.section{margin-top:18px}
+.view{display:none}
+.view.active{display:block}
+.field{display:block;width:100%;background:#090c10;border:1px solid var(--line);border-radius:10px;padding:13px;color:var(--silver);margin:8px 0 16px}
+label{color:var(--muted);font-size:12px}
+.notice{border:1px solid #66542b;background:#241e12;color:#e9ce8c;padding:12px;border-radius:10px;margin-top:15px;font-size:12px}
+.tokenrow{padding:15px 0;border-bottom:1px solid var(--line);overflow-wrap:anywhere}
+footer{padding:24px 0;color:#657080;font-size:11px;text-align:center}
+@media(max-width:850px){.app{grid-template-columns:1fr}aside{padding:15px;border-right:0;border-bottom:1px solid var(--line)}.brand{margin:0}.navgroup{display:flex;gap:5px;overflow-x:auto;margin-top:15px}.navlabel,.network{display:none}.nav{white-space:nowrap;width:auto;margin:0;padding:9px}main{padding:18px}.grid{grid-template-columns:1fr}}
+@media(max-width:420px){.top{align-items:flex-start;flex-direction:column}.card{padding:17px}.nav{font-size:12px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside>
+  <div class="brand"><img class="logo-image" src="./sethelionnetwork-logo.svg" alt="SethelionNetwork logo"><div><strong>SETHELION NETWORK</strong><small>SETHELION WALLET</small></div></div>
+  <div class="navgroup">
+    <div class="navlabel">ANA MENÜ</div>
+    <button class="nav active" data-view="overview">◈ &nbsp; Genel Bakış</button>
+    <button class="nav" data-view="markets">⌁ &nbsp; Piyasalar</button>
+    <button class="nav" data-view="buy">↙ &nbsp; Al</button>
+    <button class="nav" data-view="sell">↗ &nbsp; Sat</button>
+    <button class="nav" data-view="swap">⇄ &nbsp; Swap</button>
+    <button class="nav" data-view="transfer">↗ &nbsp; Transfer</button>
+    <button class="nav" data-view="transactions">◷ &nbsp; İşlem Geçmişi</button>
+    <button class="nav" data-view="assets">▤ &nbsp; Varlıklar</button>
+    <button class="nav" data-view="security">⬡ &nbsp; Güvenlik</button>
+  </div>
+  <div class="network"><span class="dot"></span>Solana Devnet<br><span style="padding-left:14px">Geliştirme ağı</span></div>
+</aside>
+
+<main>
+  <header class="top">
+    <div>
+      <h1 id="page-title">Cüzdanım</h1>
+      <div class="muted">Dijital varlıklarının kontrolü sende.</div>
+    </div>
+    <div class="actions" style="margin-top:0;align-items:center">
+      <div class="pill"><span class="dot"></span><span id="connection">Sunucu kontrol ediliyor</span></div>
+      <button class="btn primary" id="phantom-connect" type="button">Phantom bağla</button>
+    </div>
+  </header>
+  <div id="phantom-status" class="notice" hidden aria-live="polite"></div>
+<div class="card" id="phantom-balance-card" style="margin-bottom:18px" aria-live="polite">
+  <h2>Phantom cüzdanı · SOL bakiyesi</h2>
+  <div class="stat">
+    <span class="muted">Phantom SOL bakiyesi</span>
+    <strong id="phantom-balance">Phantom bağlanmadı</strong>
+  </div>
+  <div class="address" id="phantom-address">Phantom cüzdanını bağla.</div>
+  <label for="phantom-network" class="muted">Bakiye ağı</label>
+  <select id="phantom-network" class="btn" style="margin:8px 0">
+    <option value="" selected disabled>Ağ seç</option>
+    <option value="devnet">Solana Devnet</option>
+    <option value="mainnet">Solana Mainnet</option>
+  </select>
+  <button class="btn" id="phantom-refresh" type="button">Bakiyeyi yenile</button>
+  <p class="muted">Bu bakiye sunucu cüzdanından ayrıdır. Ağ, Phantom ayarlarıyla eşleşmelidir.</p>
+</div>
+
+  <section class="view active" id="overview">
+    <div class="grid">
+      <div class="card hero">
+        <div class="eyebrow">SOL BAKİYESİ · DEVNET</div>
+        <div class="balance" id="balance">Yükleniyor...</div>
+        <div class="muted">Gerçek piyasa değeri hesaplanmıyor</div>
+        <div class="address" id="address">Cüzdan adresi yükleniyor...</div>
+        <div class="actions"><button class="btn primary" data-go="buy">＋ Al</button><button class="btn" data-go="sell">↗ Sat</button><button class="btn" data-go="swap">⇄ Swap</button><button class="btn" id="copy">Adresi kopyala</button></div>
+        <div class="muted" id="message" style="margin-top:8px"></div>
+      </div>
+      <div class="card">
+        <h2>Hesap durumu</h2>
+        <div class="stat"><span class="muted">Ağ</span><strong>Solana Devnet</strong></div>
+        <div class="stat"><span class="muted">Cüzdan</span><strong id="wallet-state">Kontrol ediliyor</strong></div>
+        <div class="stat"><span class="muted">Token hesabı</span><strong id="token-count">—</strong></div>
+        <div class="notice">Bu bir geliştirme cüzdanıdır. Devnet varlıkları gerçek para değildir.</div>
+      </div>
+    </div>
+    <div class="card section"><h2>Token varlıkların</h2><div id="token-list"><p class="muted">Token hesapları yükleniyor...</p></div><button class="btn" id="refresh-tokens">Tokenları yenile</button></div>
+    <div class="card section"><h2>Hızlı erişim</h2><div class="actions"><button class="btn" data-go="markets">Piyasaları incele</button><button class="btn" data-go="assets">Tüm varlıklar</button><button class="btn" data-go="security">Güvenlik ayarları</button></div></div>
+  </section>
+
+  <section class="view" id="markets">
+    <div class="card">
+      <div class="top" style="margin-bottom:16px">
+        <div><h2 style="margin-bottom:5px">Canlı piyasa fiyatları</h2>
+        <div class="muted">Kaynak: CoinGecko · Referans fiyatlar, işlem kotasyonu değildir.</div></div>
+        <button class="btn" id="refresh-prices" type="button">↻ Yenile</button>
+      </div>
+      <div class="grid">
+        <div class="card">
+          <div class="eyebrow">SOLANA · SOL</div>
+          <div class="balance" id="price-sol" style="font-size:30px">Yükleniyor...</div>
+          <div class="muted" id="price-sol-time">Fiyat zamanı bekleniyor</div>
+        </div>
+        <div class="card">
+          <div class="eyebrow">USD COIN · USDC</div>
+          <div class="balance" id="price-usdc" style="font-size:30px">Yükleniyor...</div>
+          <div class="muted" id="price-usdc-time">Fiyat zamanı bekleniyor</div>
+        </div>
+      </div>
+      <div id="market-price-status" class="notice" aria-live="polite">Fiyat verisi bekleniyor...</div>
+      <div class="stat"><span class="muted">Son kontrol</span><strong id="prices-checked-at">—</strong></div>
+    </div>
+    <div class="card section">
+      <h2>Cüzdan bakiyesi</h2>
+      <div class="asset"><div class="coin"><div class="coinicon">S</div><div><strong>Solana</strong><small>SOL · Devnet test bakiyesi</small></div></div><div class="right"><strong id="market-sol">Bakiye yükleniyor</strong><small class="muted">Piyasa varlığı değildir</small></div></div>
+      <div class="notice">Devnet üzerindeki SOL yalnızca yerel test varlığıdır. Yukarıdaki fiyatlar harici piyasa referanslarıdır; bu test bakiyesinin gerçek parasal değeri olduğu anlamına gelmez.</div>
+    </div>
+  </section>
+
+  <section class="view" id="jupiter-quotes">
+    <div class="card">
+      <div class="top">
+        <div>
+          <h2>Jupiter alış / satış karşılaştırması</h2>
+          <p class="muted">Solana Mainnet · Gerçek zamanlı teklif sorgusu</p>
+        </div>
+        <button class="btn primary" id="refresh-jupiter-quotes" type="button">↻ Teklifleri yenile</button>
+      </div>
+      <div class="grid">
+        <div class="card">
+          <div class="eyebrow">ALIŞ TEKLİFİ</div>
+          <h2 style="margin-top:10px">100 USDC → SOL</h2>
+          <div class="balance" id="quote-buy-output" style="font-size:29px">Bekleniyor...</div>
+          <div class="muted" id="quote-buy-details">Teklif sorgulanıyor</div>
+        </div>
+        <div class="card">
+          <div class="eyebrow">SATIŞ TEKLİFİ</div>
+          <h2 style="margin-top:10px">1 SOL → USDC</h2>
+          <div class="balance" id="quote-sell-output" style="font-size:29px">Bekleniyor...</div>
+          <div class="muted" id="quote-sell-details">Teklif sorgulanıyor</div>
+        </div>
+      </div>
+      <div class="stat"><span class="muted">Teklif kaynağı</span><strong id="quote-source">—</strong></div>
+      <div class="stat"><span class="muted">Son sorgu</span><strong id="quote-time">—</strong></div>
+      <div id="quote-status" class="notice" aria-live="polite">Teklifler henüz sorgulanmadı.</div>
+      <p class="muted">Teklifler gösterge niteliğindedir. Ücret ve fiyat etkisi alanları sağlayıcının bildirdiği değerlerdir; nihai maliyet farklı olabilir. Bu ekran işlem imzalamaz veya göndermez. Devnet bakiyesi mainnet üzerinde kullanılamaz.</p>
+    </div>
+  </section>
+
+  <section class="view" id="buy">
+    <div class="card">
+      <h2>Kripto al</h2>
+      <p class="muted">Alım simülasyonu · Gerçek piyasa fiyatı veya ödeme sağlayıcısı bağlı değil.</p>
+
+      <label for="buy-asset">Alınacak varlık</label>
+      <select class="field" id="buy-asset">
+        <option value="SOL">SOL · Solana</option>
+        <option value="USDC">USDC · USD Coin</option>
+      </select>
+
+      <label for="buy-amount">Alım bütçesi (USD)</label>
+      <input class="field" id="buy-amount" type="number"
+        min="1" max="1000000" step="0.01" placeholder="100.00"
+        inputmode="decimal">
+
+      <div class="stat">
+        <span class="muted">Ödeme tutarı</span>
+        <strong id="buy-summary-amount">— USD</strong>
+      </div>
+      <div class="stat">
+        <span class="muted">Tahmini alınacak miktar</span>
+        <strong id="buy-summary-quantity">Hesaplanamıyor</strong>
+      </div>
+
+      <button class="btn primary" id="buy-preview" type="button">
+        Alım özetini hazırla
+      </button>
+
+      <div id="buy-result" class="notice" aria-live="polite">
+        Bu ekran yalnızca arayüz demosudur. Canlı fiyat, ödeme veya token alımı gerçekleştirilmez.
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="sell"><div class="card"><h2>Kripto sat</h2><p class="muted">Satış sağlayıcısı henüz bağlanmadı.</p><label>Varlık</label><select class="field"><option>SOL · Solana</option></select><label>Tutar</label><input class="field" type="number" min="0" placeholder="0.00" disabled><button class="btn primary" disabled>Satış sağlayıcısı bekleniyor</button><div class="notice">Bu ekran şimdilik taslaktır; herhangi bir satış veya transfer gerçekleştirmez.</div></div></section>
+
+  <section class="view" id="swap">
+    <div class="card">
+      <h2>Token Swap</h2>
+      <p class="muted">Jupiter · Solana Mainnet teklif önizlemesi</p>
+
+      <label for="swap-input-token">Gönderilecek varlık</label>
+      <select class="field" id="swap-input-token">
+        <option value="SOL">SOL · Solana</option>
+        <option value="USDC">USDC · USD Coin</option>
+      </select>
+
+      <label for="swap-input-amount">Gönderilecek miktar</label>
+      <input class="field" id="swap-input-amount" type="number"
+        min="0" max="1000000" step="any" placeholder="0.1"
+        inputmode="decimal">
+
+      <div style="text-align:center;margin:12px">
+        <button class="btn" id="swap-reverse" type="button"
+          aria-label="Swap yönünü değiştir">⇅ Yönü değiştir</button>
+      </div>
+
+      <label for="swap-output-token">Alınacak varlık</label>
+      <select class="field" id="swap-output-token">
+        <option value="USDC">USDC · USD Coin</option>
+        <option value="SOL">SOL · Solana</option>
+      </select>
+
+      <button class="btn primary" id="swap-get-quote" type="button">
+        Teklif al
+      </button>
+
+      <div id="swap-quote-result" class="notice" aria-live="polite">
+        Miktarı girip Teklif al düğmesine basın.
+      </div>
+
+      <p class="muted">
+        Jupiter teklifi hazır. Swap için Phantom imzası gerekir; işlem yalnızca Mainnet üzerinde yürütülür. Devnet bakiyesi kullanılamaz.
+        Bu Mainnet teklifi Devnet cüzdan bakiyesini kullanmaz.
+      </p>
+    </div>
+  </section>
+
+  <section class="view" id="assets"><div class="card"><h2>Tüm varlıklar</h2><div id="all-tokens" class="muted">Token hesapları yükleniyor...</div></div></section>
+
+  <section class="view" id="security"><div class="card"><h2>Cüzdan güvenliği</h2><div class="stat"><span class="muted">Ağ</span><strong>Solana Devnet</strong></div><div class="stat"><span class="muted">Adres</span><strong>Bu cihazdaki sunucu cüzdanı</strong></div><div class="notice">Özel anahtar veya kurtarma kelimeleri web sayfasında gösterilmez. Bu geliştirme sürümünde işlemler için henüz imzalama arayüzü yoktur.</div><p class="muted">Gerçek varlıklara geçmeden önce cüzdan saklama yöntemi, erişim kontrolleri ve işlem onay akışı ayrıca güvenlik incelemesinden geçirilmelidir.</p></div></section>
+
+
+  <section class="view" id="transfer">
+    <div class="card">
+      <h2>SOL Transferi</h2>
+      <p class="muted">Solana Devnet · İşlem önizlemesi</p>
+
+      <form id="transfer-form">
+        <label for="recipient">Alıcı Solana adresi</label>
+        <input class="field" id="recipient" name="recipient"
+          type="text" placeholder="Alıcı cüzdan adresini girin"
+          autocomplete="off" required>
+
+        <label for="transfer-amount">Gönderilecek SOL miktarı</label>
+        <input class="field" id="transfer-amount" name="amount"
+          type="number" min="0.000000001" step="0.000000001"
+          placeholder="0.00" required>
+
+        <button class="btn primary" type="submit">Transferi kontrol et</button>
+      </form>
+
+      <div id="transfer-result" class="notice" hidden aria-live="polite"></div>
+      <p class="muted">Bu ekran yalnızca adres ve tutar önizlemesi yapar. İşlem imzalanmaz ve gönderilmez.</p>
+    </div>
+  </section>
+
+  <section class="view" id="transactions">
+    <div class="card">
+      <h2>İşlem Geçmişi</h2>
+      <p class="muted">Solana Devnet · Zincir işlem kayıtları</p>
+      <div class="actions" style="margin-bottom:16px">
+        <button class="btn primary" id="refresh-transactions" type="button">
+          ↻ İşlemleri yenile
+        </button>
+      </div>
+      <div id="transaction-status" class="notice" aria-live="polite">
+        İşlemler yükleniyor...
+      </div>
+      <div id="transaction-list"></div>
+      <p class="muted" style="margin-top:16px">
+        İşlem kayıtları API yanıtından gösterilir. Boş liste, henüz kayıt
+        bulunmadığı veya API'nin işlem döndürmediği anlamına gelebilir.
+      </p>
+    </div>
+  </section>
+
+  <footer>SETHELION NETWORK · SETHELION WALLET · DEVELOPMENT PREVIEW</footer>
+</main>
+</div>
+<script src="https://unpkg.com/@solana/web3.js@1.98.4/lib/index.iife.min.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+function showView(name){
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===name));
+  document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===name));
+  const titles={overview:'Cüzdanım',markets:'Piyasalar',buy:'Kripto Al',sell:'Kripto Sat',swap:'Token Swap',transfer:'SOL Transferi',transactions:'İşlem Geçmişi',assets:'Varlıklar',security:'Güvenlik'};
+  $('page-title').textContent=titles[name]||'Cüzdanım';
+}
+document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.view)));
+document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.go)));
+
+
+// Phantom tarayıcı cüzdanı: yalnızca bağlantı ve herkese açık adres.
+let phantomPublicKey = null;
+
+function setPhantomStatus(message, warning = false) {
+  const status = $('phantom-status');
+  status.hidden = false;
+  status.className = warning ? 'notice warning' : 'notice';
+  status.textContent = message;
+}
+
+async function connectPhantomWallet() {
+  const button = $('phantom-connect');
+
+  if (!window.phantom?.solana?.connect) {
+    setPhantomStatus(
+      'Phantom bulunamadı. Resmî Phantom tarayıcı eklentisini kurup sayfayı yenileyin.',
+      true
+    );
+    return;
+  }
+
+  button.disabled = true;
+
+  try {
+    const result = await window.phantom.solana.connect();
+    const address = result?.publicKey?.toString();
+
+    if (!address) {
+      throw new Error('Cüzdan adresi alınamadı.');
+    }
+
+    phantomPublicKey = address;
+    button.textContent = 'Phantom bağlı';
+    setPhantomStatus(
+      'Phantom bağlantısı başarılı: ' + address +
+      '. Bu adres tarayıcı cüzdanına aittir; Devnet sunucu cüzdanından ayrıdır.'
+    );
+  } catch (error) {
+    if (error?.code === 4001) {
+      setPhantomStatus('Cüzdan bağlantısı kullanıcı tarafından reddedildi.', true);
+    } else {
+      setPhantomStatus(
+        'Phantom bağlantısı kurulamadı: ' +
+        (error?.message || 'Bilinmeyen hata'),
+        true
+      );
+    }
+  } finally {
+    button.disabled = false;
+  }
+}
+
+$('phantom-connect')?.addEventListener('click', connectPhantomWallet);
+
+async function refreshPhantomBalance() {
+  const provider = window.phantom?.solana;
+  const balanceEl = $('phantom-balance');
+  const addressEl = $('phantom-address');
+  const networkEl = $('phantom-network');
+  const refreshButton = $('phantom-refresh');
+
+  if (!provider?.publicKey) {
+    balanceEl.textContent = 'Önce Phantom bağla';
+    addressEl.textContent = 'Henüz bağlı Phantom cüzdanı yok.';
+    return;
+  }
+
+  const network = networkEl?.value;
+  if (!network) {
+    balanceEl.textContent = 'Önce ağ seç';
+    setPhantomStatus(
+      'Bakiye sorgulamadan önce Phantom cüzdanının ağını seç.',
+      true
+    );
+    return;
+  }
+
+  const rpcByNetwork = {
+    devnet: 'https://api.devnet.solana.com',
+    mainnet: 'https://api.mainnet-beta.solana.com'
+  };
+
+  try {
+    if (!window.solanaWeb3?.Connection ||
+        !window.solanaWeb3?.PublicKey) {
+      throw new Error('Solana web3.js yüklenemedi.');
+    }
+
+    balanceEl.textContent = 'Bakiye okunuyor...';
+    refreshButton.disabled = true;
+
+    const address = provider.publicKey.toString();
+    addressEl.textContent = address;
+
+    const connection = new window.solanaWeb3.Connection(
+      rpcByNetwork[network], 'confirmed'
+    );
+
+    const lamports = await connection.getBalance(
+      new window.solanaWeb3.PublicKey(address)
+    );
+
+    balanceEl.textContent =
+      (lamports / window.solanaWeb3.LAMPORTS_PER_SOL)
+        .toLocaleString('tr-TR', { maximumFractionDigits: 6 }) +
+      ' SOL · ' + (network === 'devnet' ? 'Devnet' : 'Mainnet');
+
+    setPhantomStatus(
+      'Phantom bakiyesi seçilen ağdan okundu. Ağ seçiminin Phantom cüzdanının ağıyla eşleştiğinden emin ol.'
+    );
+  } catch (error) {
+    balanceEl.textContent = 'Bakiye okunamadı';
+    setPhantomStatus(
+      'Phantom bakiyesi okunamadı: ' +
+      (error.message || 'Bilinmeyen hata'),
+      true
+    );
+  } finally {
+    refreshButton.disabled = false;
+  }
+}
+
+$('phantom-refresh')?.addEventListener('click', refreshPhantomBalance);
+$('phantom-network')?.addEventListener('change', refreshPhantomBalance);
+
+
+window.phantom?.solana?.on?.('disconnect', () => {
+  phantomPublicKey = null;
+  const button = $('phantom-connect');
+  if (button) button.textContent = 'Phantom bağla';
+  setPhantomStatus('Phantom bağlantısı kesildi.', true);
+});
+
+async function loadWallet(){
+  try{
+    const r=await fetch('/api/wallet');
+    if(!r.ok)throw Error('HTTP '+r.status);
+    const w=await r.json();
+    $('balance').textContent=Number(w.balance).toLocaleString('tr-TR',{maximumFractionDigits:4})+' SOL';
+    $('address').textContent=w.address;
+    $('connection').textContent='Sunucuya bağlı';
+    $('wallet-state').textContent='Erişilebilir';
+    $('market-sol').textContent=Number(w.balance).toLocaleString('tr-TR',{maximumFractionDigits:4})+' SOL';
+  }catch(e){
+    $('balance').textContent='Bağlantı kurulamadı';
+    $('connection').textContent='Bağlantı yok';
+    $('wallet-state').textContent='Erişilemiyor';
+    $('message').textContent='Sunucuyu ve Solana RPC ayarlarını kontrol edin.';
+  }
+}
+$('copy').addEventListener('click',async()=>{
+  const a=$('address').textContent;
+  if(!a||a.includes('yükleniyor'))return;
+  try{await navigator.clipboard.writeText(a);$('message').textContent='Cüzdan adresi kopyalandı.'}
+  catch{$('message').textContent='Adres: '+a}
+});
+async function loadTokens(){
+  const list=$('token-list'), all=$('all-tokens');
+  list.textContent='Token hesapları yükleniyor...';all.textContent='Token hesapları yükleniyor...';
+  try{
+    const r=await fetch('/api/tokens');if(!r.ok)throw Error('HTTP '+r.status);
+    const d=await r.json(), tokens=(d.tokens||[]).filter(t=>Number(t.amount)!==0);
+    $('token-count').textContent=String(tokens.length);
+    list.replaceChildren();all.replaceChildren();
+    if(!tokens.length){
+      list.textContent='Bu cüzdanda henüz token bakiyesi bulunmuyor.';
+      all.textContent='Henüz token bakiyesi bulunmuyor.';return;
+    }
+    for(const t of tokens){
+      const row=document.createElement('div');row.className='tokenrow';
+      const amount=document.createElement('strong');amount.textContent=String(t.amount)+' token';
+      const mint=document.createElement('div');mint.className='muted';mint.textContent='Mint: '+t.mint;
+      const decimals=document.createElement('div');decimals.className='muted';decimals.textContent='Ondalık basamak: '+t.decimals;
+      row.append(amount,mint,decimals);list.append(row);all.append(row.cloneNode(true));
+    }
+  }catch(e){
+    $('token-count').textContent='—';
+    list.textContent='Token bakiyeleri alınamadı. Sunucu ve SPL Token bağımlılığını kontrol edin.';
+    all.textContent='Token bilgileri şu anda alınamıyor.';
+  }
+}
+
+
+
+function quoteNumber(value, maximumFractionDigits = 9) {
+  return Number(value).toLocaleString('en-US', {
+    maximumFractionDigits
+  });
+}
+
+function quoteImpact(value) {
+  if (value === null || value === undefined || value === '') {
+    return 'Bildirilmedi';
+  }
+  const n = Number(value);
+  if (!Number.isFinite(n)) return 'Bildirilmedi';
+  return (n * 100).toLocaleString('tr-TR', {
+    maximumFractionDigits: 4
+  }) + '%';
+}
+
+async function loadJupiterQuotes() {
+  const button = $('refresh-jupiter-quotes');
+  const status = $('quote-status');
+  if (button) button.disabled = true;
+  status.className = 'notice';
+  status.textContent = 'Jupiter alış ve satış teklifleri sorgulanıyor...';
+
+  try {
+    const response = await fetch('/api/quotes', { cache: 'no-store' });
+    const data = await response.json();
+
+    if (!response.ok || !data.quotes ||
+        !data.quotes.buy || !data.quotes.sell) {
+      throw new Error(data.error || 'Geçerli teklif alınamadı.');
+    }
+
+    const buy = data.quotes.buy;
+    const sell = data.quotes.sell;
+
+    $('quote-buy-output').textContent =
+      quoteNumber(buy.outputAmount) + ' SOL';
+    $('quote-buy-details').textContent =
+      'Ücret oranı: ' +
+      (buy.feeBps == null ? 'Bildirilmedi' : buy.feeBps + ' bps') +
+      ' · Fiyat etkisi: ' + quoteImpact(buy.priceImpactPct) +
+      ' · Rota: ' + (buy.router || 'Belirtilmedi');
+
+    $('quote-sell-output').textContent =
+      quoteNumber(sell.outputAmount, 6) + ' USDC';
+    $('quote-sell-details').textContent =
+      'Ücret oranı: ' +
+      (sell.feeBps == null ? 'Bildirilmedi' : sell.feeBps + ' bps') +
+      ' · Fiyat etkisi: ' + quoteImpact(sell.priceImpactPct) +
+      ' · Rota: ' + (sell.router || 'Belirtilmedi');
+
+    $('quote-source').textContent = data.source || 'Jupiter';
+    $('quote-time').textContent = data.quotedAt
+      ? new Date(data.quotedAt).toLocaleString('tr-TR')
+      : new Date().toLocaleString('tr-TR');
+
+    status.className = 'notice';
+    status.textContent =
+      'Teklifler alındı. Yalnızca fiyat karşılaştırması yapıldı; ' +
+      'işlem imzalanmadı veya gönderilmedi.';
+  } catch (error) {
+    status.className = 'notice warning';
+    status.textContent =
+      'Teklifler alınamadı. Sunucu ve Jupiter API erişimini kontrol edin. ' +
+      error.message;
+  } finally {
+    if (button) button.disabled = false;
+  }
+}
+
+$('refresh-jupiter-quotes')?.addEventListener('click', loadJupiterQuotes);
+
+function formatMarketPrice(value) {
+  return '$' + Number(value).toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 6
+  });
+}
+
+function formatPriceTime(unixTime) {
+  if (!Number.isFinite(unixTime)) return 'Sağlayıcı zaman bilgisi yok';
+  const date = new Date(unixTime * 1000);
+  if (Number.isNaN(date.getTime())) return 'Zaman bilgisi geçersiz';
+  return 'Sağlayıcı zamanı: ' + date.toLocaleString('tr-TR');
+}
+
+// Tahminlerde yalnızca zaman damgası bulunan, yeterince yeni fiyatları kullan.
+function isPriceDataFresh(data) {
+  if (!data || data.stale || !data.updatedAt) return false;
+
+  const now = Date.now();
+  const times = [data.updatedAt.SOL, data.updatedAt.USDC];
+
+  return times.every(time =>
+    Number.isFinite(time) &&
+    now - time * 1000 <= 5 * 60 * 1000 &&
+    now - time * 1000 >= -60 * 1000
+  );
+}
+
+async function loadMarketPrices() {
+  const status = $('market-price-status');
+  const button = $('refresh-prices');
+  if (button) button.disabled = true;
+
+  try {
+    const response = await fetch('/api/prices', { cache: 'no-store' });
+    const data = await response.json();
+
+    if (!response.ok || !data.prices ||
+        !Number.isFinite(data.prices.SOL) || data.prices.SOL <= 0 ||
+        !Number.isFinite(data.prices.USDC) || data.prices.USDC <= 0) {
+      throw new Error(data.error || 'Geçerli fiyat verisi alınamadı.');
+    }
+
+    if (!isPriceDataFresh(data)) {
+      buyPrices = null;
+      buyPriceUpdatedAt = data.updatedAt || null;
+      buyPriceError = 'Fiyat zaman damgası eski veya geçersiz.';
+      updateBuySummary();
+
+      $('price-sol').textContent = formatMarketPrice(data.prices.SOL);
+      $('price-usdc').textContent = formatMarketPrice(data.prices.USDC);
+      $('price-sol-time').textContent = formatPriceTime(data.updatedAt?.SOL);
+      $('price-usdc-time').textContent = formatPriceTime(data.updatedAt?.USDC);
+      $('prices-checked-at').textContent = new Date().toLocaleTimeString('tr-TR');
+
+      status.className = 'notice warning';
+      status.textContent =
+        'Fiyat verisi eski veya doğrulanamadı. Alım tahmini için yeni fiyat bekleniyor.';
+      return;
+    }
+
+    // Aynı referans fiyatlarını Al ekranındaki hesaplayıcıyla paylaş.
+    buyPrices = data.prices;
+    buyPriceUpdatedAt = data.updatedAt || null;
+    buyPriceError = null;
+    updateBuySummary();
+
+    $('price-sol').textContent = formatMarketPrice(data.prices.SOL);
+    $('price-usdc').textContent = formatMarketPrice(data.prices.USDC);
+    $('price-sol-time').textContent =
+      formatPriceTime(data.updatedAt?.SOL);
+    $('price-usdc-time').textContent =
+      formatPriceTime(data.updatedAt?.USDC);
+    $('prices-checked-at').textContent =
+      new Date().toLocaleTimeString('tr-TR');
+
+    status.className = 'notice';
+    status.textContent = 'Bağlantı başarılı · ' +
+      (data.source || 'Harici fiyat sağlayıcısı') +
+      (data.cached ? ' · Önbellekteki fiyat' : ' · Canlı fiyat alındı') +
+      ' · USD referans fiyatları. Alış/satış kotasyonu değildir.';
+  } catch (error) {
+    status.className = 'notice warning';
+    status.textContent =
+      'Canlı fiyat güncellenemedi. Gösterilen değerler eski olabilir. ' +
+      'Bağlantıyı kontrol edip yeniden deneyin.';
+  } finally {
+    if (button) button.disabled = false;
+  }
+}
+
+$('refresh-prices')?.addEventListener('click', loadMarketPrices);
+
+const buyAmountInput = document.getElementById('buy-amount');
+const buyAssetSelect = document.getElementById('buy-asset');
+
+
+let buyPrices = null;
+let buyPriceUpdatedAt = null;
+let buyPriceError = null;
+
+function updateBuySummary() {
+  const raw = buyAmountInput.value.trim();
+  const amount = Number(raw);
+  const valid = raw !== '' && Number.isFinite(amount) &&
+    amount >= 1 && amount <= 1000000;
+  const asset = buyAssetSelect.value;
+
+  document.getElementById('buy-summary-amount').textContent =
+    valid ? amount.toLocaleString('en-US', {
+      minimumFractionDigits: 2, maximumFractionDigits: 2
+    }) + ' USD' : '— USD';
+
+  const quantity = document.getElementById('buy-summary-quantity');
+
+  if (!valid) {
+    quantity.textContent = 'Tutar girin';
+    return;
+  }
+
+  if (!buyPrices || !Number.isFinite(buyPrices[asset]) ||
+      buyPrices[asset] <= 0) {
+    quantity.textContent = 'Canlı fiyat alınamadı';
+    return;
+  }
+
+  const estimated = amount / buyPrices[asset];
+  quantity.textContent = estimated.toLocaleString('en-US', {
+    maximumFractionDigits: asset === 'SOL' ? 9 : 6
+  }) + ' ' + asset;
+}
+
+async function loadBuyPrices() {
+  const result = document.getElementById('buy-result');
+  result.className = 'notice';
+  result.textContent = 'Piyasa fiyatları kontrol ediliyor...';
+
+  try {
+    const response = await fetch('/api/prices', { cache: 'no-store' });
+    const data = await response.json();
+
+    if (!response.ok || !data.prices ||
+        !Number.isFinite(data.prices.SOL) || data.prices.SOL <= 0 ||
+        !Number.isFinite(data.prices.USDC) || data.prices.USDC <= 0) {
+      throw new Error(data.error || 'Geçerli fiyat verisi alınamadı.');
+    }
+
+    buyPriceUpdatedAt = data.updatedAt || null;
+
+    if (!isPriceDataFresh(data)) {
+      buyPrices = null;
+      buyPriceError = 'Son fiyat eski; yeni tahmin için canlı fiyat gerekli.';
+      updateBuySummary();
+
+      result.className = 'notice warning';
+      result.textContent = (data.warning ||
+        'Canlı fiyat alınamadı; son başarılı fiyat gösteriliyor.') +
+        ' Alış tahmini için fiyat sağlayıcısının yeniden çalışmasını bekleyin.';
+      return;
+    }
+
+    buyPrices = data.prices;
+    buyPriceError = null;
+    updateBuySummary();
+
+    result.className = 'notice';
+    result.textContent =
+      'Fiyat kaynağı: ' + (data.source || 'Harici sağlayıcı') +
+      (data.cached ? ' · Önbellekteki fiyat' : ' · Yeni fiyat alındı') +
+      '. SOL: $' + buyPrices.SOL.toLocaleString('en-US') +
+      ' · USDC: $' + buyPrices.USDC.toLocaleString('en-US') +
+      '. Tahminidir; işlem veya ödeme yapılmaz.';
+  } catch (error) {
+    buyPrices = null;
+    buyPriceError = error.message;
+    updateBuySummary();
+    result.className = 'notice warning';
+    result.textContent =
+      'Fiyat alınamadı. Bağlantıyı kontrol edip yeniden deneyin. ' +
+      'Gerçek alım yapılmadı.';
+  }
+}
+
+buyAmountInput.addEventListener('input', updateBuySummary);
+buyAssetSelect.addEventListener('change', updateBuySummary);
+
+document.getElementById('buy-preview').addEventListener('click', async () => {
+  const raw = buyAmountInput.value.trim();
+  const amount = Number(raw);
+  const result = document.getElementById('buy-result');
+
+  if (raw === '' || !Number.isFinite(amount) ||
+      amount < 1 || amount > 1000000) {
+    result.className = 'notice warning';
+    result.textContent = 'Lütfen 1 ile 1.000.000 USD arasında geçerli bir tutar girin.';
+    return;
+  }
+
+  if (!buyPrices) {
+    await loadBuyPrices();
+  }
+
+  if (!buyPrices) {
+    result.className = 'notice warning';
+    result.textContent =
+      'Fiyat alınamadığı için tahmin yapılamadı. ' +
+      'Hiçbir alım veya ödeme gerçekleştirilmedi.';
+    return;
+  }
+
+  const asset = buyAssetSelect.value;
+  const price = buyPrices[asset];
+  const estimated = amount / price;
+
+  result.className = 'notice';
+  result.textContent =
+    'Tahmini alım özeti: ' + amount.toFixed(2) + ' USD / ' +
+    price.toLocaleString('en-US') + ' USD/' + asset + ' ≈ ' +
+    estimated.toLocaleString('en-US', {
+      maximumFractionDigits: asset === 'SOL' ? 9 : 6
+    }) + ' ' + asset +
+    '. Bu yalnızca piyasa fiyatına dayalı hesaplamadır; ücretler, fiyat kayması ' +
+    've sağlayıcı teklifi dahil değildir. Gerçek alım veya ödeme yapılmadı.';
+});
+
+loadBuyPrices();
+
+$('transfer-form').addEventListener('submit', async (event) => {
+  event.preventDefault();
+
+  const result = $('transfer-result');
+  result.hidden = false;
+  result.replaceChildren();
+  result.className = 'notice';
+  result.textContent = 'Adres, bakiye ve ağ ücreti kontrol ediliyor...';
+
+  try {
+    const response = await fetch('/api/transfer/preview', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        recipient: $('recipient').value.trim(),
+        amount: $('transfer-amount').value
+      })
+    });
+
+    const data = await response.json();
+    result.replaceChildren();
+
+    const heading = document.createElement('strong');
+    heading.textContent = response.ok
+      ? 'TRANSFER ÖNİZLEMESİ'
+      : 'TRANSFER HAZIR DEĞİL';
+    result.append(heading);
+
+    const addLine = (label, value) => {
+      const row = document.createElement('p');
+      row.style.cssText =
+        'display:flex;justify-content:space-between;gap:16px;overflow-wrap:anywhere';
+      const left = document.createElement('span');
+      left.textContent = label;
+      const right = document.createElement('strong');
+      right.textContent = value;
+      row.append(left, right);
+      result.append(row);
+    };
+
+    if (data.amountSol !== undefined) {
+      addLine('Gönderilecek tutar', Number(data.amountSol).toFixed(9) + ' SOL');
+    }
+    if (data.estimatedFeeSol !== undefined) {
+      addLine('Tahmini ağ ücreti', Number(data.estimatedFeeSol).toFixed(9) + ' SOL');
+    }
+    if (data.totalRequiredSol !== undefined) {
+      addLine('Toplam gereken', Number(data.totalRequiredSol).toFixed(9) + ' SOL');
+    }
+    if (data.currentBalanceSol !== undefined) {
+      addLine('Mevcut bakiye', Number(data.currentBalanceSol).toFixed(9) + ' SOL');
+    }
+
+    const message = document.createElement('p');
+    message.textContent = response.ok
+      ? (data.note || 'Bu yalnızca önizlemedir; işlem gönderilmedi.')
+      : (data.error || 'Önizleme oluşturulamadı.');
+    result.append(message);
+
+    if (response.ok) {
+      const sendButton = document.createElement('button');
+      sendButton.type = 'button';
+      sendButton.id = 'transfer-send-confirm';
+      sendButton.className = 'btn primary';
+      sendButton.textContent = 'Transferi Onayla ve Gönder';
+      sendButton.style.marginTop = '12px';
+
+      sendButton.addEventListener('click', async () => {
+        const recipient = $('recipient').value.trim();
+        const amount = $('transfer-amount').value;
+
+        if (!window.confirm(
+          `${amount} SOL tutarını şu adrese göndermek istiyor musunuz?\n\n${recipient}\n\nİşlem zincire gönderilecektir.`
+        )) return;
+
+        sendButton.disabled = true;
+        sendButton.textContent = 'İşlem gönderiliyor...';
+
+        try {
+          const sendResponse = await fetch('/api/transfer/send', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ recipient, amount })
+          });
+
+          const sendData = await sendResponse.json();
+          result.replaceChildren();
+
+          const heading = document.createElement('strong');
+          heading.textContent = sendResponse.ok
+            ? 'TRANSFER SONUCU'
+            : 'TRANSFER BAŞARISIZ';
+          result.append(heading);
+
+          const detail = document.createElement('p');
+          detail.textContent = sendResponse.ok
+            ? `İşlem onaylandı. Gönderilen tutar: ${Number(sendData.amountSol).toFixed(9)} SOL. İmza: ${sendData.signature}`
+            : (sendData.error || 'Transfer tamamlanamadı.');
+          result.append(detail);
+
+          if (sendResponse.ok) {
+            result.classList.remove('warning');
+            await Promise.all([loadWallet(), loadTransactions()]);
+            sendButton.textContent = 'Transfer tamamlandı';
+          } else {
+            result.classList.add('warning');
+            sendButton.disabled = false;
+            sendButton.textContent = 'Tekrar dene';
+          }
+        } catch (error) {
+          result.classList.add('warning');
+          const errorLine = document.createElement('p');
+          errorLine.textContent =
+            'Sunucu yanıtı alınamadı. İşlemin gerçekleşip gerçekleşmediğini imzayı ve bakiyeyi kontrol etmeden yeniden göndermeyin.';
+          result.append(errorLine);
+          sendButton.disabled = false;
+          sendButton.textContent = 'Sonucu kontrol et';
+        }
+      });
+
+      result.append(sendButton);
+    } else {
+      result.classList.add('warning');
+    }
+  } catch (error) {
+    result.textContent =
+      'Sunucuya ulaşılamadı. Sunucunun çalıştığını kontrol edin.';
+    result.classList.add('warning');
+  }
+});
+
+async function loadTransactions(){
+  const status = $('transaction-status');
+  const list = $('transaction-list');
+  const button = $('refresh-transactions');
+
+  status.textContent = 'Zincir işlem kayıtları kontrol ediliyor...';
+  status.className = 'notice';
+  list.replaceChildren();
+  if(button) button.disabled = true;
+
+  try {
+    const response = await fetch('/api/transactions', {
+      cache: 'no-store'
+    });
+
+    const data = await response.json();
+    if(!response.ok) {
+      throw new Error(data.error || 'HTTP ' + response.status);
+    }
+
+    if(!Array.isArray(data.transactions)) {
+      throw new Error('API yanıtında geçerli bir transactions listesi yok.');
+    }
+
+    if(data.network) {
+      status.textContent = data.network + ' · ' +
+        data.transactions.length + ' kayıt bulundu.';
+    } else {
+      status.textContent = data.transactions.length + ' kayıt bulundu.';
+    }
+
+    if(data.transactions.length === 0) {
+      status.textContent +=
+        ' Şu anda gösterilecek işlem yok.';
+      return;
+    }
+
+    for(const tx of data.transactions) {
+      const item = document.createElement('div');
+      item.style.cssText =
+        'padding:16px 0;border-bottom:1px solid var(--border,#263044);overflow-wrap:anywhere';
+
+      const signature = tx.signature || tx.txid || tx.id || '';
+      const direction = String(tx.direction || tx.type || 'İşlem');
+      const heading = document.createElement('strong');
+      heading.textContent = direction;
+      item.appendChild(heading);
+
+      const details = document.createElement('div');
+      details.className = 'muted';
+      details.style.cssText = 'margin-top:8px;line-height:1.8';
+
+      const time = tx.blockTime ?? tx.timestamp;
+      let dateText = 'Tarih bilgisi yok';
+
+      if(time !== undefined && time !== null) {
+        const parsed = typeof time === 'number'
+          ? new Date(time < 100000000000 ? time * 1000 : time)
+          : new Date(time);
+
+        if(!Number.isNaN(parsed.getTime())) {
+          dateText = parsed.toLocaleString('tr-TR');
+        }
+      }
+
+      const amount = tx.amountSol !== undefined
+        ? String(tx.amountSol) + ' SOL'
+        : tx.amount !== undefined
+          ? String(tx.amount) + (tx.symbol ? ' ' + tx.symbol : '')
+          : 'Belirtilmemiş';
+
+      const failed = tx.err !== undefined && tx.err !== null;
+      const state = failed
+        ? 'Başarısız'
+        : (tx.status || 'Durum doğrulanmadı');
+
+      details.textContent =
+        'Tarih: ' + dateText +
+        ' · Tutar: ' + amount +
+        ' · Durum: ' + state;
+
+      item.appendChild(details);
+
+      if(signature) {
+        const shortSignature = signature.length > 24
+          ? signature.slice(0, 12) + '…' + signature.slice(-8)
+          : signature;
+
+        const link = document.createElement('a');
+        link.href = 'https://solscan.io/tx/' +
+          encodeURIComponent(signature) + '?cluster=devnet';
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.textContent = 'Solscan Devnet üzerinde görüntüle: ' +
+          shortSignature;
+        link.style.cssText =
+          'display:inline-block;margin-top:10px;color:var(--neon,#45f5d0)';
+        item.appendChild(link);
+      }
+
+      list.appendChild(item);
+    }
+  } catch(error) {
+    status.textContent =
+      'İşlem geçmişi alınamadı: ' + error.message;
+    status.className = 'notice warning';
+  } finally {
+    if(button) button.disabled = false;
+  }
+}
+
+
+const swapInputToken = document.getElementById('swap-input-token');
+const swapOutputToken = document.getElementById('swap-output-token');
+const swapAmount = document.getElementById('swap-input-amount');
+const swapButton = document.getElementById('swap-get-quote');
+const swapResult = document.getElementById('swap-quote-result');
+
+document.getElementById('swap-reverse').addEventListener('click', () => {
+  const previousInput = swapInputToken.value;
+  swapInputToken.value = swapOutputToken.value;
+  swapOutputToken.value = previousInput;
+  swapResult.className = 'notice';
+  swapResult.textContent = 'Yön değiştirildi. Yeni teklif almak için düğmeye basın.';
+});
+
+swapButton.addEventListener('click', async () => {
+  const input = swapInputToken.value;
+  const output = swapOutputToken.value;
+  const rawAmount = swapAmount.value.trim();
+  const amount = Number(rawAmount);
+
+  if (input === output) {
+    swapResult.className = 'notice warning';
+    swapResult.textContent = 'Gönderilecek ve alınacak varlıklar farklı olmalıdır.';
+    return;
+  }
+
+  if (!rawAmount || !Number.isFinite(amount) ||
+      amount <= 0 || amount > 1000000) {
+    swapResult.className = 'notice warning';
+    swapResult.textContent = '0 ile 1.000.000 arasında geçerli bir miktar girin.';
+    return;
+  }
+
+  swapButton.disabled = true;
+  swapButton.textContent = 'Teklif alınıyor...';
+  swapResult.className = 'notice';
+  swapResult.textContent = 'Jupiter teklif sağlayıcısına bağlanılıyor...';
+
+  try {
+    const params = new URLSearchParams({
+      input,
+      output,
+      amount: rawAmount
+    });
+
+    const response = await fetch('/api/swap/quote?' + params.toString(), {
+      cache: 'no-store'
+    });
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || data.detail || 'Teklif alınamadı.');
+    }
+
+    const received = Number(data.outputAmount);
+    if (!Number.isFinite(received) || received <= 0) {
+      throw new Error('Sağlayıcı geçerli bir çıktı miktarı döndürmedi.');
+    }
+
+    const impact = data.priceImpactPct == null
+      ? 'Bildirilmedi'
+      : (Number(data.priceImpactPct) * 100).toLocaleString('tr-TR', {
+          maximumFractionDigits: 4
+        }) + '%';
+
+    swapResult.replaceChildren();
+    swapResult.className = 'notice';
+
+    const heading = document.createElement('strong');
+    heading.textContent = 'Teklif alındı';
+    swapResult.appendChild(heading);
+
+    const details = document.createElement('p');
+    details.textContent =
+      Number(data.inputAmount).toLocaleString('en-US', {
+        maximumFractionDigits: input === 'SOL' ? 9 : 6
+      }) + ' ' + input + ' → ' +
+      received.toLocaleString('en-US', {
+        maximumFractionDigits: output === 'SOL' ? 9 : 6
+      }) + ' ' + output;
+    swapResult.appendChild(details);
+
+    const metadata = document.createElement('p');
+    metadata.textContent =
+      'Ağ: ' + (data.network || 'Solana Mainnet') +
+      ' · Rota: ' + (data.router || 'Belirtilmedi') +
+      ' · Fiyat etkisi: ' + impact +
+      ' · Ücret oranı: ' +
+      (data.feeBps == null ? 'Bildirilmedi' : data.feeBps + ' bps');
+    swapResult.appendChild(metadata);
+
+    const warning = document.createElement('p');
+    warning.textContent =
+      'Yalnızca fiyat önizlemesi. İşlem imzalanmadı ve gönderilmedi. ' +
+      'Devnet bakiyesi Mainnet üzerinde kullanılamaz.';
+    swapResult.appendChild(warning);
+
+    if (data.quotedAt) {
+      const time = document.createElement('p');
+      time.className = 'muted';
+      time.textContent = 'Teklif zamanı: ' +
+        new Date(data.quotedAt).toLocaleString('tr-TR');
+      swapResult.appendChild(time);
+    }
+  } catch (error) {
+    swapResult.className = 'notice warning';
+    swapResult.textContent = 'Teklif alınamadı: ' + error.message;
+  } finally {
+    swapButton.disabled = false;
+    swapButton.textContent = 'Teklif al';
+  }
+});
+
+$('refresh-tokens').addEventListener('click',loadTokens);
+$('refresh-transactions').addEventListener('click',loadTransactions);
+loadWallet();
+loadTokens();
+loadTransactions();
+loadJupiterQuotes();
+setInterval(loadJupiterQuotes, 60000);
+loadMarketPrices();
+setInterval(loadMarketPrices, 60000);
+
+// Jupiter V2 order -> Phantom signTransaction -> Jupiter execute
+(() => {
+  const $ = id => document.getElementById(id);
+  const quoteButton = $("swap-get-quote");
+  const inputToken = $("swap-input-token");
+  const outputToken = $("swap-output-token");
+  const amountInput = $("swap-input-amount");
+  const resultBox = $("swap-quote-result");
+
+  if (!quoteButton || !inputToken || !outputToken ||
+      !amountInput || !resultBox) return;
+
+  const button = document.createElement("button");
+  button.id = "tbn-swap-execute";
+  button.type = "button";
+  button.textContent = "Phantom ile Swap";
+  button.style.cssText = "margin:10px 8px;padding:10px 16px";
+  quoteButton.insertAdjacentElement("afterend", button);
+
+  const status = (message, warning = false) => {
+    resultBox.className = warning ? "notice warning" : "notice";
+    resultBox.textContent = message;
+  };
+
+  button.addEventListener("click", async () => {
+    const provider = window.phantom?.solana;
+    if (!provider?.isConnected || !provider.publicKey) {
+      status("Önce Phantom bağla düğmesiyle cüzdanını bağla.", true);
+      return;
+    }
+
+    if (!window.solanaWeb3?.VersionedTransaction) {
+      status("Solana kütüphanesi yüklenemedi. Sayfayı yenile ve bağlantını kontrol et.", true);
+      return;
+    }
+
+    const taker = provider.publicKey.toString();
+    const input = inputToken.value;
+    const output = outputToken.value;
+    const amount = amountInput.value.trim();
+
+    if (!["SOL", "USDC"].includes(input) ||
+        !["SOL", "USDC"].includes(output) || input === output ||
+        !/^(?:0|[1-9]\d*)(?:\.\d+)?$/.test(amount) ||
+        Number(amount) <= 0 || Number(amount) > 1000000) {
+      status("Token yönünü ve miktarı kontrol et.", true);
+      return;
+    }
+
+    button.disabled = true;
+
+    try {
+      status("Jupiter işlem taslağı alınıyor...");
+      const orderResponse = await fetch("/api/swap/order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        cache: "no-store",
+        body: JSON.stringify({ input, output, amount, taker })
+      });
+
+      const order = await orderResponse.json();
+      if (!orderResponse.ok) {
+        throw new Error(order.error || order.detail || "Jupiter taslağı alınamadı.");
+      }
+
+      if (order.network !== "Solana Mainnet" || order.taker !== taker ||
+          !order.transaction || !order.requestId) {
+        throw new Error("İşlem taslağı veya cüzdan bilgisi doğrulanamadı.");
+      }
+
+      const decimalsIn = input === "SOL" ? 9 : 6;
+      const decimalsOut = output === "SOL" ? 9 : 6;
+      const received = (Number(order.outAmount) / 10 ** decimalsOut)
+        .toLocaleString("en-US", { maximumFractionDigits: decimalsOut });
+      const spent = (Number(order.inAmount) / 10 ** decimalsIn)
+        .toLocaleString("en-US", { maximumFractionDigits: decimalsIn });
+
+      if (!window.confirm(
+        "GERÇEK SOLANA MAINNET SWAP\n\n" +
+        "Cüzdan: " + taker + "\n" +
+        "Vereceğin: " + spent + " " + input + "\n" +
+        "Tahmini alacağın: " + received + " " + output + "\n\n" +
+        "Bu işlem gerçek varlık ve ağ ücreti kullanabilir. Devam edilsin mi?"
+      )) {
+        status("Swap iptal edildi.");
+        return;
+      }
+
+      if (!provider.isConnected || provider.publicKey.toString() !== taker) {
+        throw new Error("Phantom hesabı değişti; işlem gönderilmedi.");
+      }
+
+      status("Phantom imzası bekleniyor...");
+      const binary = atob(order.transaction);
+      const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
+      const tx = window.solanaWeb3.VersionedTransaction.deserialize(bytes);
+      const signed = await provider.signTransaction(tx);
+
+      if (!provider.isConnected || provider.publicKey.toString() !== taker) {
+        throw new Error("Phantom hesabı değişti. İşlem gönderilmedi.");
+      }
+
+      const signedBytes = signed.serialize();
+      let encoded = "";
+      for (let i = 0; i < signedBytes.length; i++) {
+        encoded += String.fromCharCode(signedBytes[i]);
+      }
+
+      status("İmzalı işlem Jupiter'a gönderiliyor...");
+      const executeResponse = await fetch("/api/swap/execute", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        cache: "no-store",
+        body: JSON.stringify({
+          signedTransaction: btoa(encoded),
+          requestId: order.requestId
+        })
+      });
+
+      const result = await executeResponse.json();
+      if (!executeResponse.ok) {
+        throw new Error(result.error || result.detail ||
+          "Yürütme başarısız. Tekrar denemeden önce işlem durumunu kontrol et.");
+      }
+
+      if (
+        result.status === "Success" &&
+        result.signature &&
+        result.verifiedOnMainnet === true
+      ) {
+        resultBox.className = "notice";
+        resultBox.replaceChildren();
+
+        const title = document.createElement("strong");
+        title.textContent = "Swap başarılı";
+        resultBox.appendChild(title);
+
+        const signature = document.createElement("p");
+        signature.textContent = result.signature;
+        resultBox.appendChild(signature);
+
+        const link = document.createElement("a");
+        link.href = "https://solscan.io/tx/" + encodeURIComponent(result.signature);
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.textContent = "Solscan üzerinde görüntüle";
+        resultBox.appendChild(link);
+      } else if (result.verificationPending) {
+        status(
+          "Jupiter işlemi gönderdi ancak Mainnet doğrulaması henüz tamamlanmadı. İşlem geçmişini kontrol etmeden tekrar gönderme.",
+          true
+        );
+      } else {
+        status(
+          "Swap başarısı Mainnet üzerinde doğrulanamadı. İşlem geçmişini kontrol etmeden tekrar gönderme.",
+          true
+        );
+      }
+    } catch (error) {
+      status(
+        "Swap tamamlanamadı: " + (error.message || "Bilinmeyen hata") +
+        ". Tekrar denemeden önce Phantom ve işlem geçmişini kontrol et.",
+        true
+      );
+    } finally {
+      button.disabled = false;
+    }
+  });
+})();
+
+
+</script>
+</body>
+</html>
