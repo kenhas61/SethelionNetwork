@@ -92,6 +92,22 @@ app.get("/api/tokens", async (req, res) => {
 
 app.use(express.json({ limit: "10kb" }));
 
+function parseSolToLamports(amount) {
+  const value = amount.trim();
+  if (!/^[0-9]+(?:\.[0-9]{1,9})?$/.test(value)) return null;
+
+  const [whole, fraction = ""] = value.split(".");
+  if (whole.length > 7) return null;
+
+  const lamports = BigInt(whole) * 1000000000n
+    + BigInt((fraction + "000000000").slice(0, 9));
+
+  if (lamports <= 0n || lamports > BigInt(Number.MAX_SAFE_INTEGER)) {
+    return null;
+  }
+  return Number(lamports);
+}
+
 app.post("/api/transfer/preview", async (req, res) => {
   try {
     const { PublicKey, Transaction, SystemProgram } =
@@ -119,7 +135,6 @@ app.post("/api/transfer/preview", async (req, res) => {
       });
     }
 
-    console.log("DEBUG amount:", JSON.stringify(amount), "type:", typeof amount);
     if (!/^[0-9]+(?:\.[0-9]{1,9})?$/.test(amount.trim())) {
       return res.status(400).json({
         error: "Tutar en fazla 9 ondalık basamak içermeli."
@@ -133,8 +148,8 @@ app.post("/api/transfer/preview", async (req, res) => {
       });
     }
 
-    const lamports = Math.round(sol * LAMPORTS_PER_SOL);
-    if (!Number.isSafeInteger(lamports) || lamports <= 0) {
+    const lamports = parseSolToLamports(amount);
+    if (lamports === null) {
       return res.status(400).json({
         error: "Tutar güvenli biçimde dönüştürülemiyor."
       });
@@ -239,8 +254,8 @@ app.post("/api/transfer/send", async (req, res) => {
       return res.status(400).json({ error: "Normal bir cüzdan adresi gerekli." });
     }
 
-    const lamports = Math.round(sol * LAMPORTS_PER_SOL);
-    if (!Number.isSafeInteger(lamports) || lamports <= 0) {
+    const lamports = parseSolToLamports(amount);
+    if (lamports === null) {
       return res.status(400).json({ error: "Geçersiz transfer tutarı." });
     }
 
@@ -313,17 +328,46 @@ app.post("/api/transfer/send", async (req, res) => {
     try {
       if (fs.existsSync(HISTORY_FILE)) {
         history = JSON.parse(fs.readFileSync(HISTORY_FILE, "utf8"));
-        if (!Array.isArray(history)) history = [];
+        if (!Array.isArray(history)) {
+          throw new Error("Transaction history is not an array");
+        }
       }
     } catch (historyError) {
-      console.error("Transaction history read error:", historyError.message);
+      console.error("Confirmed transaction; history read failed:", historyError.message);
+      res.set("Cache-Control", "no-store");
+      return res.status(200).json({
+        ...record,
+        historySaved: false,
+        warning: "Transfer onaylandı; işlem geçmişi okunamadığı için kayıt saklanamadı. Tekrar transfer göndermeyin."
+      });
     }
 
     history = history.filter((item) => item.signature !== signature);
     history.unshift(record);
-    fs.writeFileSync(HISTORY_FILE, JSON.stringify(history.slice(0, 500), null, 2));
 
-    res.json(record);
+    const tempFile = HISTORY_FILE + ".tmp";
+    try {
+      fs.writeFileSync(
+        tempFile,
+        JSON.stringify(history.slice(0, 500), null, 2),
+        { encoding: "utf8", mode: 0o600 }
+      );
+      fs.renameSync(tempFile, HISTORY_FILE);
+    } catch (historyError) {
+      try {
+        if (fs.existsSync(tempFile)) fs.unlinkSync(tempFile);
+      } catch {}
+      console.error("Confirmed transaction; history write failed:", historyError.message);
+      res.set("Cache-Control", "no-store");
+      return res.status(200).json({
+        ...record,
+        historySaved: false,
+        warning: "Transfer onaylandı ancak işlem geçmişine kaydedilemedi. Tekrar transfer göndermeyin.",
+      });
+    }
+
+    res.set("Cache-Control", "no-store");
+    res.json({ ...record, historySaved: true });
   } catch (error) {
     console.error("Transfer send error:", error.message);
     res.status(500).json({ error: "Transfer tamamlanamadı." });
