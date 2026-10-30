@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#08090c">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#080c0b">
 <title>Sethelion Network | Sethelion Wallet</title>
 <style>
 :root {
@@ -63,6 +65,863 @@ label{color:var(--muted);font-size:12px}
 footer{padding:24px 0;color:#657080;font-size:11px;text-align:center}
 @media(max-width:850px){.app{grid-template-columns:1fr}aside{padding:15px;border-right:0;border-bottom:1px solid var(--line)}.brand{margin:0}.navgroup{display:flex;gap:5px;overflow-x:auto;margin-top:15px}.navlabel,.network{display:none}.nav{white-space:nowrap;width:auto;margin:0;padding:9px}main{padding:18px}.grid{grid-template-columns:1fr}}
 @media(max-width:420px){.top{align-items:flex-start;flex-direction:column}.card{padding:17px}.nav{font-size:12px}}
+
+/* SETHELION PREMIUM UI V1 */
+:root {
+  color-scheme: dark;
+  --bg: #080b10;
+  --panel: #10151d;
+  --panel2: #151d27;
+  --line: #263341;
+  --silver: #edf4f8;
+  --muted: #91a1b2;
+  --neon: #70f5ce;
+  --purple: #b3a3ff;
+  --red: #ff7584;
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-color: #344454 #090c11;
+}
+
+body {
+  background:
+    radial-gradient(ellipse at 80% 0%, #173d3533, transparent 38%),
+    radial-gradient(ellipse at 0% 65%, #24214a18, transparent 35%),
+    var(--bg);
+  letter-spacing: .01em;
+}
+
+button, input, select {
+  transition: border-color .18s ease, background .18s ease,
+              color .18s ease, transform .18s ease,
+              box-shadow .18s ease;
+}
+
+button:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 2px solid var(--neon);
+  outline-offset: 3px;
+}
+
+.app {
+  grid-template-columns: 248px minmax(0, 1fr);
+}
+
+aside {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 28px 17px;
+  background: #0a0e14eF;
+  border-right-color: #263541;
+  backdrop-filter: blur(18px);
+}
+
+.brand {
+  padding: 5px 4px 20px;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #263341;
+}
+
+.logo-image {
+  box-shadow: 0 0 26px #65f5cb22;
+}
+
+.brand strong {
+  font-size: 12px;
+  letter-spacing: 1.1px;
+}
+
+.brand small {
+  display: block;
+  margin-top: 4px;
+}
+
+.navlabel {
+  margin-top: 20px;
+}
+
+.nav {
+  min-height: 43px;
+  border-radius: 11px;
+  font-size: 13px;
+}
+
+.nav:hover {
+  transform: translateX(2px);
+}
+
+.nav.active {
+  background: linear-gradient(100deg, #18362f, #14221f);
+  box-shadow: inset 3px 0 var(--neon);
+}
+
+.network {
+  background: #101820;
+}
+
+main {
+  max-width: 1600px;
+  padding: clamp(20px, 3vw, 42px);
+}
+
+.top {
+  padding-bottom: 22px;
+  border-bottom: 1px solid #263341;
+}
+
+h1 {
+  font-size: clamp(23px, 2.4vw, 31px);
+  letter-spacing: -1px;
+}
+
+h2 {
+  letter-spacing: -.3px;
+}
+
+.card {
+  background: linear-gradient(145deg, #141b24, #0e131a);
+  border-color: #293744;
+  border-radius: 19px;
+  box-shadow: 0 10px 32px #00000012;
+}
+
+.card.hero {
+  background:
+    radial-gradient(ellipse at 95% 0%, #2d68534a, transparent 48%),
+    linear-gradient(130deg, #17232a, #10151d 72%);
+  border-color: #345449;
+}
+
+.balance {
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 28px #65f5cb12;
+}
+
+.pill {
+  background: #101c1a;
+  border-color: #315349;
+}
+
+.btn {
+  min-height: 41px;
+  border-color: #354452;
+  border-radius: 11px;
+  background: #18212b;
+}
+
+.btn:hover {
+  border-color: #647887;
+  background: #202c37;
+}
+
+.btn.primary {
+  background: linear-gradient(135deg, #80f8d6, #58dfb7);
+  border-color: #80f8d6;
+  box-shadow: 0 4px 18px #65f5cb12;
+}
+
+.btn.primary:hover {
+  box-shadow: 0 5px 22px #65f5cb30;
+  transform: translateY(-1px);
+}
+
+.field {
+  min-height: 46px;
+  border-color: #2b3947;
+  background: #0a1017;
+}
+
+.field:focus {
+  border-color: var(--neon);
+  outline: none;
+  box-shadow: 0 0 0 3px #65f5cb16;
+}
+
+.notice {
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.asset, .tokenrow {
+  border-bottom-color: #263341;
+}
+
+.coinicon {
+  border: 1px solid #354454;
+  background: #17232c;
+}
+
+.section {
+  margin-top: 22px;
+}
+
+#transaction-list, #token-list, #all-tokens {
+  overflow-wrap: anywhere;
+}
+
+footer {
+  border-top: 1px solid #263341;
+  margin-top: 30px;
+  letter-spacing: 1.2px;
+}
+
+@media (min-width: 1200px) {
+  .grid {
+    gap: 22px;
+  }
+  .card {
+    padding: 25px;
+  }
+}
+
+@media (max-width: 850px) {
+  .app {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  aside {
+    position: relative;
+    height: auto;
+    overflow: visible;
+    padding: 13px 16px;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .brand {
+    padding-bottom: 12px;
+    border-bottom: 0;
+  }
+
+  .navgroup {
+    padding-bottom: 3px;
+    scrollbar-width: thin;
+  }
+
+  .nav {
+    flex-shrink: 0;
+  }
+
+  main {
+    padding: 22px 16px;
+  }
+
+  .top {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  main {
+    padding: 18px 12px;
+  }
+
+  .card, .card.hero {
+    padding: 17px;
+    border-radius: 15px;
+  }
+
+  .actions {
+    gap: 8px;
+  }
+
+  .btn {
+    padding: 10px 12px;
+  }
+
+  .balance {
+    overflow-wrap: anywhere;
+  }
+
+  .pill {
+    max-width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+  }
+}
+
+
+/* SETHELION INFINITY — LIVING NETWORK */
+.ln-panel {
+  position:relative; isolation:isolate; overflow:hidden;
+  margin-bottom:20px; padding:clamp(22px,4vw,38px);
+  border:1px solid #285346; border-radius:24px;
+  background:radial-gradient(ellipse at 75% 40%,#164b3b 0,transparent 42%),
+             linear-gradient(135deg,#101b1a,#090c12 75%);
+  box-shadow:inset 0 1px #ffffff0c,0 18px 55px #0005;
+}
+.ln-panel:before {
+  content:"";position:absolute;z-index:-1;width:240px;height:240px;
+  right:-65px;top:-90px;border:1px solid #65f5cb35;
+  border-radius:50%;box-shadow:0 0 0 24px #65f5cb08,
+  0 0 0 50px #65f5cb06;animation:ln-orbit 18s linear infinite;
+}
+.ln-panel:after {
+  content:"";position:absolute;z-index:-1;width:9px;height:9px;
+  right:95px;top:45px;border-radius:50%;background:#65f5cb;
+  box-shadow:0 0 22px 5px #65f5cb66;
+}
+@keyframes ln-orbit {to{transform:rotate(360deg)}}
+.ln-kicker {font-size:10px;letter-spacing:3px;color:#8eafaa}
+.ln-heading {font-size:clamp(27px,4vw,43px);line-height:1.12;
+  letter-spacing:-1.5px;margin:14px 0 10px;font-weight:800}
+.ln-heading span {color:#65f5cb}
+.ln-description {max-width:470px;color:#a3b4b5;line-height:1.7}
+.ln-metrics {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;margin-top:28px}
+.ln-metric {min-width:0;padding:15px;border:1px solid #ffffff12;
+  border-radius:14px;background:#ffffff06}
+.ln-metric small {display:block;color:#91a3a5;font-size:11px;margin-bottom:8px}
+.ln-metric strong {display:block;font-size:clamp(13px,2vw,19px);
+  overflow-wrap:anywhere;color:#edf8f4}
+.ln-live {display:inline-flex;align-items:center;gap:8px;
+  color:#a9c4bd;font-size:11px;margin-top:20px}
+.ln-live-dot {width:8px;height:8px;border-radius:50%;
+  background:#65f5cb;box-shadow:0 0 12px #65f5cb}
+.ln-actions {display:flex;flex-wrap:wrap;gap:9px;margin-top:22px}
+.ln-actions .btn {position:relative}
+@media(max-width:480px) {
+  .ln-metrics {grid-template-columns:1fr}
+  .ln-metric {display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .ln-metric small {margin:0}
+}
+@media(prefers-reduced-motion:reduce) {
+  .ln-panel:before {animation:none}
+}
+
+
+/* SETHELION-VISUAL-UPGRADE-01 */
+:root {
+  --bg: #050907;
+  --panel: #0c1311;
+  --panel2: #111c18;
+  --line: #20382e;
+  --silver: #edf8f1;
+  --muted: #91a99b;
+  --neon: #72ffd0;
+  --purple: #b3a0ff;
+  --red: #ff7c91;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--bg);
+}
+
+body {
+  background:
+    radial-gradient(ellipse at 75% 0%, #123e2b65, transparent 35%),
+    radial-gradient(ellipse at 5% 45%, #163c2928, transparent 35%),
+    #050907;
+  letter-spacing: .01em;
+}
+
+aside {
+  background: linear-gradient(180deg, #0b120f, #070b09);
+  border-right-color: #1b3027;
+}
+
+.logo-image {
+  border-radius: 15px;
+  box-shadow: 0 0 24px #65f5cb24, inset 0 0 12px #65f5cb10;
+}
+
+.brand strong {
+  letter-spacing: 1.5px;
+}
+
+.nav {
+  border-radius: 12px;
+  transition: background .22s ease, border-color .22s ease,
+    color .22s ease, transform .22s ease;
+}
+
+.nav:hover {
+  transform: translateX(2px);
+}
+
+.nav.active {
+  background: linear-gradient(100deg, #14372a, #10221b);
+  border-color: #326b50;
+  box-shadow: inset 3px 0 #72ffd0, 0 0 22px #42e6a00b;
+}
+
+.network,
+.pill {
+  backdrop-filter: blur(12px);
+  background-color: #0e1712b8;
+  border-color: #294737;
+}
+
+main {
+  max-width: 1600px;
+}
+
+.top {
+  margin-bottom: 30px;
+}
+
+h1 {
+  font-size: clamp(25px, 3vw, 34px);
+  letter-spacing: -1px;
+}
+
+h2 {
+  letter-spacing: -.3px;
+}
+
+.card {
+  position: relative;
+  border-color: #24372e;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #111a15f5, #0a100df7);
+  box-shadow: 0 12px 40px #00000020, inset 0 1px #ffffff06;
+  transition: border-color .25s ease, box-shadow .25s ease;
+}
+
+.card:hover {
+  border-color: #355745;
+  box-shadow: 0 15px 42px #00000035, inset 0 1px #ffffff09;
+}
+
+.hero {
+  min-height: 250px;
+  border-color: #356b50;
+  background:
+    radial-gradient(ellipse at 88% 15%, #1e785047, transparent 44%),
+    radial-gradient(ellipse at 10% 100%, #183c2c70, transparent 52%),
+    linear-gradient(135deg, #111d16, #09100d 78%);
+}
+
+.hero:after {
+  color: #72ffd008;
+  text-shadow: 0 0 45px #72ffd008;
+}
+
+.balance {
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 28px #72ffd015;
+}
+
+.positive {
+  text-shadow: 0 0 18px #72ffd025;
+}
+
+.btn {
+  min-height: 42px;
+  border-color: #304438;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #17231c, #101711);
+  transition: transform .18s ease, border-color .18s ease,
+    box-shadow .18s ease, filter .18s ease;
+}
+
+.btn:hover {
+  border-color: #5d9978;
+  box-shadow: 0 5px 22px #65f5cb12;
+  filter: brightness(1.12);
+}
+
+.btn:active {
+  transform: scale(.98);
+}
+
+.btn.primary {
+  color: #04110a;
+  border-color: #72ffd0;
+  background: linear-gradient(110deg, #72ffd0, #9bffce);
+  box-shadow: 0 0 20px #72ffd012;
+}
+
+.btn:focus-visible,
+.nav:focus-visible,
+.field:focus-visible,
+select:focus-visible {
+  outline: 2px solid #72ffd0;
+  outline-offset: 3px;
+}
+
+.field {
+  border-color: #263a2e;
+  border-radius: 12px;
+  background: #080e0a;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.field:focus {
+  border-color: #65dba9;
+  box-shadow: 0 0 0 3px #65f5cb12;
+  outline: none;
+}
+
+.asset,
+.tokenrow {
+  border-color: #203329;
+}
+
+.coinicon {
+  border: 1px solid #31513e;
+  background: linear-gradient(145deg, #1c3425, #101a13);
+}
+
+.notice {
+  border-radius: 13px;
+}
+
+.ln-panel {
+  border-color: #34775a;
+  border-radius: 25px;
+  background:
+    radial-gradient(ellipse at 80% 10%, #1c69452b, transparent 42%),
+    radial-gradient(ellipse at 12% 100%, #1a4b3330, transparent 48%),
+    linear-gradient(140deg, #0d1912, #080d0a 72%);
+  box-shadow: 0 20px 65px #00000040,
+    inset 0 1px #c4ffe30a, 0 0 35px #48e9a008;
+  animation: ln-breathe 8s ease-in-out infinite;
+}
+
+#ln-balance {
+  color: #8bffd0;
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 800;
+  letter-spacing: -1px;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 28px #72ffd022;
+}
+
+#ln-address {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+#ln-status {
+  transition: color .2s ease;
+}
+
+@keyframes ln-breathe {
+  0%, 100% {
+    box-shadow: 0 20px 65px #00000040,
+      inset 0 1px #c4ffe30a, 0 0 25px #48e9a008;
+  }
+  50% {
+    box-shadow: 0 22px 68px #00000045,
+      inset 0 1px #c4ffe312, 0 0 34px #48e9a015;
+  }
+}
+
+footer {
+  border-top: 1px solid #1b2b22;
+  margin-top: 32px;
+  letter-spacing: 1.5px;
+}
+
+@media (max-width: 850px) {
+  aside {
+    background: #09100cf5;
+  }
+
+  .navgroup {
+    scrollbar-width: thin;
+    scrollbar-color: #31533e transparent;
+  }
+
+  .nav:hover {
+    transform: none;
+  }
+
+  .card:hover {
+    box-shadow: 0 12px 40px #00000020;
+  }
+}
+
+@media (max-width: 480px) {
+  .ln-panel {
+    border-radius: 19px;
+    padding: 20px;
+  }
+
+  .hero {
+    min-height: 220px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .ln-panel {
+    animation: none;
+  }
+
+  *, *::before, *::after {
+    transition-duration: .01ms !important;
+  }
+}
+
+
+/* SETHELION-OBSIDIAN-INFINITY-01 */
+:root {
+  --bg: #050706;
+  --panel: #0b100e;
+  --panel2: #101713;
+  --line: #23352c;
+  --silver: #f0f5f1;
+  --muted: #94a69b;
+  --neon: #78ffd0;
+  --purple: #b9a3ff;
+  --red: #ff7584;
+}
+html { scroll-behavior: smooth; }
+body {
+  background:
+    radial-gradient(ellipse at 76% -15%, #164b35 0%, transparent 34%),
+    radial-gradient(ellipse at 0% 45%, #101e18 0%, transparent 36%),
+    #050706;
+  letter-spacing: .01em;
+}
+.app { grid-template-columns: 245px minmax(0,1fr); }
+aside {
+  background: linear-gradient(180deg,#090e0b,#060807);
+  border-right: 1px solid #243a2e;
+  box-shadow: 10px 0 50px #0003;
+}
+.logo-image {
+  border-color: #6dfac4;
+  box-shadow: 0 0 24px #65f5cb30;
+}
+.brand strong { letter-spacing: 1.7px; }
+.nav {
+  border-radius: 12px;
+  transition: background .2s ease,border-color .2s ease,transform .2s ease;
+}
+.nav:hover { transform: translateX(3px); }
+.nav:hover,.nav.active {
+  background: linear-gradient(100deg,#17372a,#101a14);
+  border-color: #38654d;
+  box-shadow: inset 3px 0 #78ffd0;
+}
+main { max-width: 1600px; padding: clamp(18px,3vw,42px); }
+h1 { font-size: clamp(26px,3vw,38px); letter-spacing: -1.2px; }
+h2 { letter-spacing: -.25px; }
+.card {
+  position: relative;
+  background: linear-gradient(145deg,#111914eF,#090d0bF5);
+  border-color: #26392e;
+  border-radius: 19px;
+  box-shadow: 0 12px 40px #0002,inset 0 1px #ffffff08;
+  transition: border-color .22s ease,transform .22s ease,box-shadow .22s ease;
+}
+.card:hover {
+  border-color: #42644e;
+  box-shadow: 0 18px 45px #0004,inset 0 1px #ffffff0b;
+}
+.hero {
+  min-height: 260px;
+  background:
+    radial-gradient(ellipse at 90% 0%,#1c6244 0%,transparent 43%),
+    radial-gradient(ellipse at 60% 110%,#103c2b 0%,transparent 52%),
+    linear-gradient(135deg,#101b15,#080c0a 76%);
+  border-color: #3b634b;
+}
+.hero:after {
+  content: "∞";
+  right: 22px;
+  bottom: -76px;
+  font-size: clamp(180px,23vw,290px);
+  line-height: 1;
+  font-weight: 300;
+  color: #78ffd00b;
+  text-shadow: 0 0 70px #65f5cb12;
+}
+.balance {
+  font-size: clamp(36px,5vw,54px);
+  letter-spacing: -2px;
+  text-shadow: 0 0 35px #78ffd015;
+}
+.eyebrow { letter-spacing: 2.3px; }
+.pill,.network {
+  background: #0d1711;
+  border-color: #294534;
+}
+.btn {
+  border-radius: 11px;
+  border-color: #34483b;
+  background: linear-gradient(145deg,#18221b,#101611);
+  transition: transform .18s ease,border-color .18s ease,filter .18s ease;
+}
+.btn:hover {
+  transform: translateY(-1px);
+  border-color: #6ba985;
+  filter: brightness(1.1);
+}
+.btn.primary {
+  background: linear-gradient(110deg,#a4ffdc,#65eab5);
+  border-color: #a4ffdc;
+  color: #06130b;
+  box-shadow: 0 5px 22px #65f5cb18;
+}
+.field {
+  background: #070b08;
+  border-color: #2b4032;
+  border-radius: 12px;
+}
+.field:focus {
+  outline: 2px solid #78ffd055;
+  border-color: #78ffd0;
+}
+.asset,.tokenrow { border-color: #23352a; }
+.coinicon {
+  background: linear-gradient(145deg,#203d2c,#111c15);
+  border: 1px solid #345a40;
+}
+.notice {
+  border-color: #4c4930;
+  background: linear-gradient(120deg,#201d12,#13140e);
+  border-radius: 12px;
+}
+.ln-panel {
+  border-color: #38654b;
+  border-radius: 24px;
+  background:
+    radial-gradient(ellipse at 50% 45%,#154b35 0%,transparent 48%),
+    radial-gradient(ellipse at 100% 0%,#1b3929 0%,transparent 43%),
+    linear-gradient(145deg,#0d1510,#070b08 75%);
+  box-shadow: inset 0 1px #ffffff0b,0 22px 75px #0005;
+}
+.ln-panel h2 { letter-spacing: -.8px; }
+.ln-panel button { min-height: 42px; }
+footer { letter-spacing: 2px; }
+@media(max-width:850px) {
+  .app { grid-template-columns: minmax(0,1fr); }
+  aside { box-shadow: 0 8px 35px #0003; }
+  .navgroup { scrollbar-width: thin; }
+  .nav:hover { transform: none; }
+  main { padding: 20px 15px; }
+}
+@media(max-width:480px) {
+  .ln-panel { border-radius: 18px; padding: 19px; }
+  .card,.card.hero { border-radius: 16px; }
+  .balance { font-size: clamp(32px,10vw,44px); }
+}
+@media(prefers-reduced-motion:reduce) {
+  html { scroll-behavior: auto; }
+  *,*::before,*::after {
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+  }
+}
+
+
+/* SETHELION-DIAMOND-CLAW-01 */
+:root {
+  --neon: #70ffd5;
+  --purple: #a18aff;
+  --bg: #05070b;
+  --panel: #0c1118;
+  --panel2: #111925;
+  --line: #253343;
+}
+body {
+  background:
+    radial-gradient(ellipse at 50% -5%, #164331 0%, transparent 32%),
+    radial-gradient(ellipse at 95% 35%, #251743 0%, transparent 28%),
+    #05070b;
+}
+.card {
+  background: linear-gradient(145deg, #121a24, #080c12 78%);
+  border-color: #29394a;
+  box-shadow: inset 0 1px #ffffff09, 0 15px 36px #0005;
+}
+.ln-panel {
+  position: relative;
+  isolation: isolate;
+  border: 1px solid #397a64;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 35%, #1b4939 0%, transparent 43%),
+    radial-gradient(ellipse at 95% 5%, #35205c 0%, transparent 38%),
+    linear-gradient(145deg, #0c1519, #05080e 78%);
+  box-shadow: inset 0 1px #ffffff12, 0 20px 55px #0008,
+              0 0 30px #54ffc20c;
+}
+.ln-panel:before {
+  content: "♛";
+  position: absolute;
+  z-index: -1;
+  right: 12px;
+  top: 8px;
+  font-size: clamp(100px, 28vw, 170px);
+  line-height: 1;
+  color: #7affd508;
+  text-shadow: 0 0 35px #65f5cb10;
+  pointer-events: none;
+}
+.ln-panel [id="ln-balance"] {
+  color: #c0ffeb;
+  text-shadow: 0 0 22px #65f5cb40;
+  letter-spacing: -1.5px;
+}
+.hero {
+  border-color: #39725f;
+  background:
+    radial-gradient(ellipse at 92% 5%, #216047 0%, transparent 45%),
+    radial-gradient(ellipse at 0% 100%, #241942 0%, transparent 48%),
+    linear-gradient(135deg, #111a24, #070a10);
+}
+.btn.primary {
+  box-shadow: 0 0 20px #65f5cb24;
+}
+.coinicon {
+  box-shadow: inset 0 0 0 1px #65f5cb28, 0 0 16px #65f5cb10;
+}
+@media (max-width: 850px) {
+  body {
+    background:
+      radial-gradient(ellipse at 50% 0%, #123a2c 0%, transparent 31%),
+      #05070b;
+  }
+  aside {
+    background: #080c11;
+    border-bottom-color: #263b33;
+  }
+  .navgroup {
+    scrollbar-width: none;
+  }
+  .navgroup::-webkit-scrollbar {
+    display: none;
+  }
+  .nav.active {
+    background: #10271f;
+    border-color: #2e6b55;
+    box-shadow: inset 0 0 14px #65f5cb09;
+  }
+  main {
+    padding: 15px 12px calc(24px + env(safe-area-inset-bottom));
+  }
+  .ln-panel {
+    border-radius: 22px;
+    padding: 21px 17px;
+  }
+  .card, .card.hero {
+    border-radius: 18px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -114,6 +973,40 @@ footer{padding:24px 0;color:#657080;font-size:11px;text-align:center}
 </div>
 
   <section class="view active" id="overview">
+
+<div class="ln-panel" id="living-network-panel">
+  <div class="ln-kicker">SETHELION INFINITY / THE LIVING NETWORK</div>
+  <div class="ln-heading">More than a wallet.<br><span>A living universe.</span></div>
+  <p class="ln-description">
+    Dijital varlıkların, ağın ve işlemlerin tek bir yaşayan deneyimde buluşuyor.
+    Gerçek cüzdan verileri burada; belirsiz durumlar asla başarı gibi gösterilmez.
+  </p>
+  <div class="ln-metrics">
+    <div class="ln-metric">
+      <small>Sunucu cüzdanı</small>
+      <strong id="ln-address">Bağlanıyor…</strong>
+    </div>
+    <div class="ln-metric">
+      <small>Mevcut bakiye</small>
+      <strong id="ln-balance">Yükleniyor…</strong>
+    </div>
+    <div class="ln-metric">
+      <small>Ağ</small>
+      <strong id="ln-network">Kontrol ediliyor…</strong>
+    </div>
+  </div>
+  <div class="ln-live">
+    <span class="ln-live-dot" id="ln-dot"></span>
+    <span id="ln-status" role="status" aria-live="polite">Cüzdan bağlantısı doğrulanıyor</span>
+    <span>·</span><span id="ln-updated">—</span>
+  </div>
+  <div class="ln-actions">
+    <button class="btn primary" type="button" data-go="swap">↔ Swap alanı</button>
+    <button class="btn" type="button" data-go="transfer">Transfer alanı</button>
+    <button class="btn" type="button" id="ln-refresh">↻ Ağı yenile</button>
+  </div>
+</div>
+
     <div class="grid">
       <div class="card hero">
         <div class="eyebrow">SOL BAKİYESİ · DEVNET</div>
@@ -375,6 +1268,14 @@ async function connectPhantomWallet() {
       'Phantom bağlantısı başarılı: ' + address +
       '. Bu adres tarayıcı cüzdanına aittir; Devnet sunucu cüzdanından ayrıdır.'
     );
+    if ($('phantom-network')?.value) {
+      await refreshPhantomBalance();
+    } else {
+      setPhantomStatus(
+        'Phantom bağlandı. Bakiye ağı olarak Devnet veya Mainnet seçip Bakiyeyi yenile düğmesine bas.',
+        false
+      );
+    }
   } catch (error) {
     if (error?.code === 4001) {
       setPhantomStatus('Cüzdan bağlantısı kullanıcı tarafından reddedildi.', true);
@@ -417,7 +1318,7 @@ async function refreshPhantomBalance() {
 
   const rpcByNetwork = {
     devnet: 'https://api.devnet.solana.com',
-    mainnet: 'https://api.mainnet-beta.solana.com'
+    mainnet: 'https://solana-rpc.publicnode.com'
   };
 
   try {
@@ -900,11 +1801,35 @@ $('transfer-form').addEventListener('submit', async (event) => {
         sendButton.disabled = true;
         sendButton.textContent = 'İşlem gönderiliyor...';
 
+        const requestKey = 'sethelion-transfer-request';
+        let requestId;
+        try {
+          const saved = sessionStorage.getItem(requestKey);
+          const parsed = saved ? JSON.parse(saved) : null;
+          if (parsed && parsed.recipient === recipient &&
+              parsed.amount === amount &&
+              typeof parsed.requestId === 'string') {
+            requestId = parsed.requestId;
+          } else {
+            requestId = crypto.randomUUID();
+            sessionStorage.setItem(requestKey, JSON.stringify({
+              recipient, amount, requestId
+            }));
+          }
+        } catch (storageError) {
+          result.classList.add('warning');
+          result.textContent =
+            'Transfer kimliği güvenli biçimde korunamadı. Yeniden denemeyin; önce işlem durumunu kontrol edin.';
+          sendButton.disabled = true;
+          sendButton.textContent = 'Durumu kontrol edin';
+          return;
+        }
+
         try {
           const sendResponse = await fetch('/api/transfer/send', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ recipient, amount })
+            body: JSON.stringify({ recipient, amount, requestId })
           });
 
           const sendData = await sendResponse.json();
@@ -928,8 +1853,9 @@ $('transfer-form').addEventListener('submit', async (event) => {
             sendButton.textContent = 'Transfer tamamlandı';
           } else {
             result.classList.add('warning');
-            sendButton.disabled = false;
-            sendButton.textContent = 'Tekrar dene';
+            sendButton.disabled = true;
+            sendButton.textContent = 'Durumu kontrol edin';
+            addTransferStatusButton(result, requestId);
           }
         } catch (error) {
           result.classList.add('warning');
@@ -937,8 +1863,9 @@ $('transfer-form').addEventListener('submit', async (event) => {
           errorLine.textContent =
             'Sunucu yanıtı alınamadı. İşlemin gerçekleşip gerçekleşmediğini imzayı ve bakiyeyi kontrol etmeden yeniden göndermeyin.';
           result.append(errorLine);
-          sendButton.disabled = false;
-          sendButton.textContent = 'Sonucu kontrol et';
+          sendButton.disabled = true;
+          sendButton.textContent = 'Durumu kontrol edin';
+          addTransferStatusButton(result, requestId);
         }
       });
 
@@ -952,6 +1879,82 @@ $('transfer-form').addEventListener('submit', async (event) => {
     result.classList.add('warning');
   }
 });
+
+
+async function addTransferStatusButton(result, requestId) {
+  if (result.querySelector("#transfer-status-check")) return;
+
+  const button = document.createElement("button");
+  button.type = "button";
+  button.id = "transfer-status-check";
+  button.className = "btn primary";
+  button.textContent = "Transfer Durumunu Sorgula";
+  button.style.marginTop = "12px";
+
+  button.addEventListener("click", async () => {
+
+    // DEMO_MODE_NO_SIGNING
+    status("Demo modu: Gerçek işlem imzalama ve gönderme kapalı. Para harcanmaz.");
+    return;
+    button.disabled = true;
+    button.textContent = "Durum kontrol ediliyor...";
+
+    try {
+      const response = await fetch(
+        "/api/transfer/status?requestId=" +
+          encodeURIComponent(requestId),
+        { cache: "no-store" }
+      );
+
+      const data = await response.json().catch(() => ({}));
+      const message = document.createElement("p");
+      message.setAttribute("role", "status");
+
+      if (response.status === 404 || data.status === "not_found") {
+        message.textContent =
+          "Kayıt bulunamadı. Bu, transferin gerçekleşmediğini kanıtlamaz. " +
+          "Yeni transfer göndermeyin; işlemi ayrıca doğrulayın.";
+      } else if (!response.ok) {
+        message.textContent =
+          data.error || "Transfer durumu doğrulanamadı. Yeniden göndermeyin.";
+      } else if (data.status === "confirmed") {
+        message.textContent =
+          "Transfer zincirde onaylandı." +
+          (data.signature ? " İmza: " + data.signature : "");
+        result.classList.remove("warning");
+        await Promise.all([loadWallet(), loadTransactions()]);
+      } else if (data.status === "failed") {
+        message.textContent =
+          "Zincir işlemin başarısız olduğunu bildirdi. " +
+          "Yeni transfer başlatmadan önce imzayı ve zincir sonucunu inceleyin.";
+      } else {
+        message.textContent =
+          "Transfer hâlâ beklemede veya sonucu belirsiz. " +
+          (data.verificationError || "Daha sonra tekrar kontrol edin.") +
+          " Otomatik olarak yeniden göndermeyin.";
+      }
+
+      const oldMessage = result.querySelector(
+        "#transfer-status-message"
+      );
+      if (oldMessage) oldMessage.remove();
+
+      message.id = "transfer-status-message";
+      result.append(message);
+      button.textContent = "Durumu Tekrar Sorgula";
+    } catch (error) {
+      button.textContent = "Tekrar Durum Sorgula";
+      const message = document.createElement("p");
+      message.textContent =
+        "Durum sunucusuna ulaşılamadı. Yeni transfer göndermeyin.";
+      result.append(message);
+    } finally {
+      button.disabled = false;
+    }
+  });
+
+  result.append(button);
+}
 
 async function loadTransactions(){
   const status = $('transaction-status');
@@ -1359,6 +2362,67 @@ setInterval(loadMarketPrices, 60000);
 })();
 
 
+
+/* Living Network: yalnızca mevcut cüzdan API'sini okur. */
+(function () {
+  const el = id => document.getElementById(id);
+  const shortAddress = address =>
+    typeof address === "string" && address.length > 12
+      ? address.slice(0, 6) + "…" + address.slice(-6)
+      : "Adres doğrulanamadı";
+
+  let busy = false;
+
+  async function refreshLivingNetwork() {
+    if (busy) return;
+    busy = true;
+    el("ln-status").textContent = "Cüzdan verisi kontrol ediliyor…";
+
+    try {
+      const response = await fetch("/api/wallet", { cache: "no-store" });
+      if (!response.ok) throw new Error("HTTP " + response.status);
+
+      const data = await response.json();
+      if (typeof data.address !== "string" ||
+          typeof data.balance !== "number" ||
+          !Number.isFinite(data.balance)) {
+        throw new Error("Geçersiz cüzdan yanıtı");
+      }
+
+      el("ln-address").textContent = shortAddress(data.address);
+      el("ln-address").title = data.address;
+      el("ln-balance").textContent = data.balance.toFixed(4) + " SOL";
+      el("ln-network").textContent = data.network || "Bilinmeyen ağ";
+      el("ln-status").textContent = "Cüzdan API bağlantısı aktif";
+      el("ln-updated").textContent =
+        new Date().toLocaleTimeString("tr-TR");
+      el("ln-dot").style.background = "#65f5cb";
+      el("ln-dot").style.boxShadow = "0 0 12px #65f5cb";
+    } catch (error) {
+      el("ln-status").textContent =
+        "Bağlantı doğrulanamadı; son değerler korunuyor";
+      el("ln-dot").style.background = "#ff7584";
+      el("ln-dot").style.boxShadow = "0 0 12px #ff7584";
+    } finally {
+      busy = false;
+    }
+  }
+
+  el("ln-refresh").addEventListener("click", refreshLivingNetwork);
+  refreshLivingNetwork();
+  window.setInterval(refreshLivingNetwork, 20000);
+})();
+
 </script>
+
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js")
+      .catch(error => console.error("PWA kaydı başarısız:", error));
+  });
+}
+</script>
+
 </body>
 </html>

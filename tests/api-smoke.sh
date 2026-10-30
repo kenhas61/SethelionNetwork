@@ -82,6 +82,28 @@ check_status "Güvenli sınırı aşan tutar reddediliyor" 400 \
   -H 'Content-Type: application/json' \
   -d '{"recipient":"11111111111111111111111111111111","amount":"9999999"}'
 
+
+check_status "Transfer durum rotası geçersiz requestId reddediyor" 400 \
+  --get "$BASE/api/transfer/status" \
+  --data-urlencode "requestId=invalid"
+
+status_code=$(curl -sS -o /tmp/sethelion-status-body \
+  -w '%{http_code}' --get \
+  --data-urlencode "requestId=00000000-0000-4000-8000-000000000001" \
+  "$BASE/api/transfer/status") || status_code=000
+
+if [[ "$status_code" == "404" ]] &&
+   grep -q '"status":"not_found"' /tmp/sethelion-status-body &&
+   grep -q '"doNotRetryAutomatically":true' /tmp/sethelion-status-body; then
+  echo "PASS: Bilinmeyen transfer durumu güvenli yanıt veriyor (HTTP 404)"
+  PASS=$((PASS + 1))
+else
+  echo "FAIL: Bilinmeyen transfer durumu beklenen yanıtı vermedi (HTTP $status_code)"
+  cat /tmp/sethelion-status-body
+  FAIL=$((FAIL + 1))
+fi
+rm -f /tmp/sethelion-status-body
+
 echo "Başarılı: $PASS"
 echo "Başarısız: $FAIL"
 

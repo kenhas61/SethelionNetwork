@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080c0b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Sethelion">
+<link rel="manifest" href="/manifest.webmanifest">
+<title>Sethelion Wallet</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#080c0b;color:#eef5f0;font:15px -apple-system,BlinkMacSystemFont,sans-serif}
+main{max-width:440px;margin:auto;padding:calc(env(safe-area-inset-top) + 24px) 20px calc(env(safe-area-inset-bottom) + 25px)}
+.brand{display:flex;justify-content:space-between;align-items:center;margin-bottom:34px}
+.brand strong{letter-spacing:2px;font-size:14px}
+.muted{color:#84958c;font-size:12px}
+.status{color:#72e5b7;font-size:11px}
+.card{border:1px solid #29463a;border-radius:23px;padding:24px;background:radial-gradient(ellipse at 100% 0,#18382b,transparent 58%),linear-gradient(145deg,#141c19,#0d1210);box-shadow:0 20px 55px #0005}
+.label{color:#94aa9e;font-size:11px;letter-spacing:1.5px}
+.balance{font-size:43px;font-weight:650;letter-spacing:-2px;margin:17px 0 4px;overflow-wrap:anywhere}
+.sol{color:#72e5b7;font-size:14px}
+hr{border:0;border-top:1px solid #2b3b33;margin:23px 0}
+.address{font-size:12px;overflow-wrap:anywhere;line-height:1.8;margin-top:8px}
+.network{display:flex;justify-content:space-between;margin-top:19px;gap:12px}
+.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:15px 0 24px}
+button{background:#141c18;border:1px solid #2c4035;border-radius:14px;color:#dcebe2;padding:16px 4px;font-size:12px}
+button span{display:block;color:#72e5b7;font-size:21px;margin-bottom:7px}
+.info{border:1px solid #26342c;border-radius:15px;padding:16px;line-height:1.7;color:#9baea3;font-size:12px}
+footer{text-align:center;color:#62776b;font-size:10px;margin-top:25px;letter-spacing:1.5px}
+</style>
+</head>
+<body>
+<main>
+<header class="brand">
+<div><strong>SETHELION ∞</strong><div class="muted" style="margin-top:5px">THE LIVING NETWORK</div></div>
+<div class="status">● READ ONLY</div>
+</header>
+<section class="card">
+<div class="label">YOUR DIGITAL ASSET</div>
+<div class="balance" id="balance">—</div>
+<div class="sol">SOL · Solana Devnet</div>
+<hr>
+<div class="label">WALLET ADDRESS</div>
+<div class="address" id="address">Cüzdan yükleniyor…</div>
+<div class="network"><span class="muted">NETWORK</span><span id="network">Bağlanıyor…</span></div>
+</section>
+<div class="actions">
+<button onclick="copyAddress()"><span>⌘</span>Adresi kopyala</button>
+<button onclick="refreshWallet()"><span>↻</span>Yenile</button>
+<button onclick="showInfo()"><span>∞</span>Ağ durumu</button>
+</div>
+<div class="info" id="message" aria-live="polite">Cüzdan bilgileri güvenli, salt okunur API üzerinden alınır. Bu ekrandan işlem imzalanamaz veya gönderilemez.</div>
+<footer>SETHELION · COMPACT EDITION</footer>
+</main>
+<script>
+let walletAddress="";
+async function refreshWallet(){
+const b=document.getElementById("balance"),n=document.getElementById("network");
+try{
+const r=await fetch("/api/wallet",{cache:"no-store"});
+if(!r.ok)throw Error("API "+r.status);
+const d=await r.json();
+if(typeof d.address!=="string"||typeof d.balance!=="number")throw Error("Geçersiz API yanıtı");
+walletAddress=d.address;
+b.textContent=d.balance.toLocaleString("tr-TR",{maximumFractionDigits:9});
+document.getElementById("address").textContent=d.address;
+n.textContent=d.network||"Ağ doğrulanamadı";
+document.getElementById("message").textContent="Cüzdan verileri güncel. Bu ekran yalnızca bakiye ve adres görüntüler.";
+}catch(e){
+b.textContent="Bağlantı yok";n.textContent="Erişilemiyor";
+document.getElementById("message").textContent="Cüzdan API'sine ulaşılamadı. Mac sunucusunun çalıştığını kontrol et.";
+}
+}
+async function copyAddress(){
+if(!walletAddress)return;
+try{await navigator.clipboard.writeText(walletAddress);document.getElementById("message").textContent="Cüzdan adresi kopyalandı."}
+catch(e){document.getElementById("message").textContent=walletAddress}
+}
+function showInfo(){document.getElementById("message").textContent="Mobil prototip salt okunurdur. Transfer ve swap işlemleri bu arayüzden sunulmaz."}
+refreshWallet();
+</script>
+</body>
+</html>

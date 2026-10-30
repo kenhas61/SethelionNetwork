@@ -5,7 +5,7 @@ const { Keypair, Connection, LAMPORTS_PER_SOL } =
   require("@solana/web3.js");
 
 const app = express();
-const PORT = 3000;
+const PORT = Number(process.env.PORT) || 3000;
 const RPC =
   process.env.SOLANA_RPC_URL ||
   "https://api.devnet.solana.com";
@@ -220,11 +220,151 @@ app.post("/api/transfer/preview", async (req, res) => {
   }
 });
 
+
+// TRANSFER_IDEMPOTENCY_V1
+const crypto = require("crypto");
+const TRANSFER_STATE_FILE = path.join(__dirname, "transfer-execution-state.json");
+function loadTransferStates() {
+  if (!fs.existsSync(TRANSFER_STATE_FILE)) return {};
+  const value = JSON.parse(fs.readFileSync(TRANSFER_STATE_FILE, "utf8"));
+  if (!value || typeof value !== "object" || Array.isArray(value))
+    throw new Error("Transfer durum dosyası geçersiz; güvenlik için başlatma durduruldu.");
+  return value;
+}
+const transferStates = loadTransferStates();
+function persistTransferStates() {
+  const tmp = TRANSFER_STATE_FILE + ".tmp";
+  const fd = fs.openSync(tmp, "w", 0o600);
+  try {
+    fs.writeFileSync(fd, JSON.stringify(transferStates, null, 2), "utf8");
+    fs.fsyncSync(fd);
+  } finally { fs.closeSync(fd); }
+  fs.renameSync(tmp, TRANSFER_STATE_FILE);
+}
+
+app.get("/api/transfer/status", async (req, res) => {
+  res.set("Cache-Control", "no-store");
+  const requestId = req.query.requestId;
+
+  if (typeof requestId !== "string" ||
+      !/^[a-f0-9-]{36}$/i.test(requestId)) {
+    return res.status(400).json({
+      error: "Geçerli bir transfer requestId gerekli.",
+      doNotRetryAutomatically: true
+    });
+  }
+
+  if (!Object.prototype.hasOwnProperty.call(transferStates, requestId)) {
+    return res.status(404).json({
+      status: "not_found",
+      message: "Kayıt bulunamadı; bu, transferin gerçekleşmediğini kanıtlamaz.",
+      doNotRetryAutomatically: true
+    });
+  }
+
+  let state = transferStates[requestId];
+
+  if (typeof state.signature === "string" &&
+      /^[1-9A-HJ-NP-Za-km-z]{32,100}$/.test(state.signature)) {
+    try {
+      const result = await connection.getSignatureStatuses(
+        [state.signature],
+        { searchTransactionHistory: true }
+      );
+      const chainStatus = result.value[0];
+
+      if (chainStatus &&
+          (chainStatus.confirmationStatus === "confirmed" ||
+           chainStatus.confirmationStatus === "finalized")) {
+        const now = new Date().toISOString();
+        state = {
+          ...state,
+          status: chainStatus.err ? "failed" : "confirmed",
+          lastCheckedAt: now,
+          ...(chainStatus.err
+            ? { chainError: chainStatus.err }
+            : { confirmedAt: state.confirmedAt || now })
+        };
+        delete state.verificationError;
+        transferStates[requestId] = state;
+        persistTransferStates();
+      } else {
+        const wasConfirmed =
+          state.status === "confirmed" && Boolean(state.confirmedAt);
+
+        state = {
+          ...state,
+          status: wasConfirmed ? "confirmed" : (state.status || "pending"),
+          lastCheckedAt: new Date().toISOString(),
+          verificationError: chainStatus
+            ? "İşlem henüz confirmed seviyesinde değil."
+            : "RPC imzayı henüz bulamadı; bu, işlemin gerçekleşmediğini veya başarısız olduğunu kanıtlamaz."
+        };
+
+        transferStates[requestId] = state;
+        persistTransferStates();
+      }
+    } catch (error) {
+      console.error("Transfer status RPC error:", error.message);
+      state = {
+        ...state,
+        verificationError:
+          "Zincir durumu şu anda doğrulanamadı; otomatik tekrar göndermeyin."
+      };
+    }
+  }
+
+  return res.json({
+    requestId,
+    status: state.status || "unknown",
+    signature: state.signature || null,
+    createdAt: state.createdAt || null,
+    lastCheckedAt: state.lastCheckedAt || null,
+    confirmedAt: state.confirmedAt || null,
+    verificationError: state.verificationError || null,
+    chainError: state.chainError || null,
+    doNotRetryAutomatically: true
+  });
+});
+
+const activeTransferExecutions = new Set();
+
 app.post("/api/transfer/send", async (req, res) => {
+
+  let requestId;
   try {
     const { PublicKey, Transaction, SystemProgram } =
       require("@solana/web3.js");
     const { recipient, amount } = req.body || {};
+    requestId = req.body && req.body.requestId;
+    if (typeof requestId !== "string" ||
+        !/^[a-f0-9-]{36}$/i.test(requestId)) {
+      return res.status(400).json({ error: "Geçerli bir transfer requestId gerekli." });
+    }
+    if (activeTransferExecutions.has(requestId) ||
+        Object.prototype.hasOwnProperty.call(transferStates, requestId)) {
+      res.set("Cache-Control", "no-store");
+      return res.status(409).json({
+        error: "Bu transfer isteği daha önce kaydedildi. Durumu doğrulamadan tekrar göndermeyin.",
+        status: transferStates[requestId].status,
+        signature: transferStates[requestId].signature || null,
+        doNotRetryAutomatically: true
+      });
+    }
+    activeTransferExecutions.add(requestId);
+    transferStates[requestId] = {
+      status: "pending", createdAt: new Date().toISOString(),
+      signature: null
+    };
+    try { persistTransferStates(); }
+    catch (e) {
+      delete transferStates[requestId];
+      console.error("Transfer state persistence error:", e.message);
+      return res.status(503).json({
+        error: "Transfer durumu kaydedilemedi; işlem gönderilmedi.",
+        doNotRetryAutomatically: true
+      });
+    }
 
     if (typeof recipient !== "string" || typeof amount !== "string") {
       return res.status(400).json({
@@ -264,6 +404,14 @@ app.post("/api/transfer/send", async (req, res) => {
       return res.status(400).json({ error: "Kendi cüzdanınıza transfer yapılamaz." });
     }
 
+  // DEMO_MODE_NO_TRANSFER
+  res.set("Cache-Control", "no-store");
+  return res.status(403).json({
+    error: "Demo modu aktif. Gerçek SOL transferi kapalı.",
+    executionPending: false,
+    doNotRetryAutomatically: true
+  });
+
     const balance = await connection.getBalance(wallet.publicKey, "confirmed");
     const transaction = new Transaction().add(
       SystemProgram.transfer({
@@ -295,10 +443,32 @@ app.post("/api/transfer/send", async (req, res) => {
     }
 
     transaction.sign(wallet);
-    const signature = await connection.sendRawTransaction(
-      transaction.serialize(),
+    const rawTransaction = transaction.serialize();
+    const bs58Module = require("bs58");
+    const bs58 = bs58Module.encode ? bs58Module : bs58Module.default;
+
+    if (!transaction.signature) {
+      throw new Error("İmzalı işlem imzası oluşturulamadı.");
+    }
+
+    const signature = bs58.encode(transaction.signature);
+
+    // İmzayı ağ gönderiminden önce kalıcı kaydet.
+    transferStates[requestId] = {
+      ...transferStates[requestId],
+      signature,
+      lastCheckedAt: new Date().toISOString()
+    };
+    persistTransferStates();
+
+    const sentSignature = await connection.sendRawTransaction(
+      rawTransaction,
       { skipPreflight: false }
     );
+
+    if (sentSignature !== signature) {
+      throw new Error("RPC imzası yerel işlem imzasıyla eşleşmedi.");
+    }
 
     const confirmation = await connection.confirmTransaction(
       { signature, ...latest },
@@ -306,12 +476,26 @@ app.post("/api/transfer/send", async (req, res) => {
     );
 
     if (confirmation.value.err) {
+      transferStates[requestId] = {
+        ...transferStates[requestId],
+        status: "failed",
+        chainError: confirmation.value.err,
+        lastCheckedAt: new Date().toISOString()
+      };
+      persistTransferStates();
       return res.status(502).json({
         error: "İşlem zincirde başarısız oldu.",
         signature,
-        details: confirmation.value.err
+        details: confirmation.value.err,
+        doNotRetryAutomatically: true
       });
     }
+
+    transferStates[requestId] = {
+      ...transferStates[requestId], status: "confirmed",
+      confirmedAt: new Date().toISOString()
+    };
+    persistTransferStates();
 
     const record = {
       network: NETWORK,
@@ -370,7 +554,29 @@ app.post("/api/transfer/send", async (req, res) => {
     res.json({ ...record, historySaved: true });
   } catch (error) {
     console.error("Transfer send error:", error.message);
-    res.status(500).json({ error: "Transfer tamamlanamadı." });
+    if (requestId && Object.prototype.hasOwnProperty.call(transferStates, requestId)) {
+      try {
+        transferStates[requestId] = {
+          ...transferStates[requestId],
+          status: transferStates[requestId].status === "confirmed"
+            ? "confirmed" : "pending",
+          lastCheckedAt: new Date().toISOString(),
+          verificationError: "Sonuç belirsiz olabilir; otomatik tekrar gönderim yapmayın."
+        };
+        persistTransferStates();
+      } catch (persistError) {
+        console.error("Transfer state persistence error:", persistError.message);
+      }
+    }
+    res.set("Cache-Control", "no-store");
+    res.status(502).json({
+      error: "Transfer sonucu kesinleştirilemedi. Durumu kontrol etmeden tekrar göndermeyin.",
+      doNotRetryAutomatically: true
+    });
+  } finally {
+    if (requestId) {
+      activeTransferExecutions.delete(requestId);
+    }
   }
 });
 
@@ -415,7 +621,7 @@ app.get("/api/transactions", async (req, res) => {
     }));
 
     const merged = new Map();
-    for (const tx of [...chainRecords, ...saved]) {
+    for (const tx of [...saved, ...chainRecords]) {
       if (tx && typeof tx.signature === "string" &&
           !merged.has(tx.signature)) {
         merged.set(tx.signature, tx);
@@ -1009,6 +1215,14 @@ app.get("/api/swap/status", (req, res) => {
 });
 
 app.post("/api/swap/execute", async (req, res) => {
+
+  // DEMO_MODE_NO_EXECUTION
+  res.set("Cache-Control", "no-store");
+  return res.status(403).json({
+    error: "Demo modu aktif. Gerçek swap gönderimi kapalı.",
+    executionPending: false,
+    doNotRetryAutomatically: true
+  });
   let requestId;
   let locked = false;
 
@@ -1132,7 +1346,7 @@ app.post("/api/swap/execute", async (req, res) => {
     if (status === "Success" && signature) {
       try {
         const tx = await mainnetConnection.getTransaction(signature, {
-          commitment: "confirmed",
+          commitment: "finalized",
           maxSupportedTransactionVersion: 0
         });
 
@@ -1239,7 +1453,7 @@ app.post("/api/swap/execute", async (req, res) => {
     }
 
     console.log("Mainnet RPC genesis hash doğrulandı.");
-    app.listen(PORT, "127.0.0.1", () => {
+    app.listen(PORT, process.env.HOST || "127.0.0.1", () => {
       console.log(`Sethelion Network: http://127.0.0.1:${PORT}`);
     });
   } catch (error) {

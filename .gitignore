@@ -40,3 +40,17 @@ add-metadata.mjs
 create-tb-metadata.mjs
 create-test-metadata.mjs
 update-metadata-uri.mjs
+
+# Kalıcı SOL transfer durumları
+transfer-execution-state.json
+transfer-execution-state.json.tmp
+
+# Geçici güvenlik yedekleri
+*.backup-*
+
+# Yerel işlem verileri ve eski geliştirme yedekleri
+transaction-history.json
+transfer-safety-review-*/
+public/*.before-*
+public/*.pre-*
+wallet-server.cjs.before-*

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node tests/amount-conversion.test.cjs && bash tests/api-smoke.sh",
+    "test": "node tests/amount-conversion.test.cjs && node --test swap-safety-static.test.cjs tests/transfer-safety-static.test.cjs && bash tests/api-smoke.sh",
     "start": "node wallet-server.cjs"
   },
   "keywords": [],
