@@ -1,4 +1,5 @@
 const express = require("express");
+const helmet = require("helmet");
 const path = require("path");
 const fs = require("fs");
 const { Keypair, Connection, LAMPORTS_PER_SOL } =
@@ -37,7 +38,166 @@ function getWallet() {
   return Keypair.fromSecretKey(secret);
 }
 
-app.use(express.static(path.join(__dirname, "public")));
+
+// HTTP security headers
+app.use(helmet({
+  contentSecurityPolicy: false,
+  crossOriginEmbedderPolicy: false
+}));
+
+app.use(express.json({ limit: "32kb" }));
+
+// Secure admin session authentication
+const session = require("express-session");
+const SQLiteSessionStore = require("./auth-store.cjs");
+const auth = require("./security/auth.cjs");
+
+const sessionSecret = fs.readFileSync(
+  path.join(__dirname, "private", "session-secret"), "utf8"
+).trim();
+
+if (sessionSecret.length < 64) {
+  throw new Error("SESSION_SECRET güvenli uzunlukta değil.");
+}
+
+app.use(session({
+  name: "sethelion.sid",
+  secret: sessionSecret,
+  store: new SQLiteSessionStore(),
+  resave: false,
+  saveUninitialized: false,
+  rolling: true,
+  cookie: {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    maxAge: 8 * 60 * 60 * 1000,
+    path: "/"
+  }
+ }));
+
+// Public assets remain accessible; wallet application requires authentication.
+app.get("/app.html", (req, res) => {
+  res.setHeader("Cache-Control", "no-store");
+  res.sendFile(path.join(__dirname, "public", "app.html"));
+});
+
+app.get("/", (req, res) => {
+  res.setHeader("Cache-Control", "no-store");
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+app.use(express.static(path.join(__dirname, "public"), {
+  index: false,
+  setHeaders(res, filePath) {
+    if (filePath.endsWith(".html")) {
+      res.setHeader("Cache-Control", "no-store");
+    }
+  }
+}));
+
+
+
+
+const loginAttempts = new Map();
+
+app.post("/api/auth/login", async (req, res) => {
+  const ip = req.ip || "unknown";
+  const now = Date.now();
+  let record = loginAttempts.get(ip);
+
+  if (!record || now - record.started > 15 * 60 * 1000) {
+    record = { started: now, count: 0 };
+    loginAttempts.set(ip, record);
+  }
+
+  if (record.count >= 5) {
+    return res.status(429).json({
+      error: "Çok fazla giriş denemesi. Daha sonra tekrar deneyin."
+    });
+  }
+
+  record.count++;
+
+  try {
+    const admin = auth.loadAdmin();
+    const username = req.body?.username;
+    const password = req.body?.password;
+
+    if (
+      typeof username !== "string" ||
+      username !== admin.username ||
+      !(await auth.verifyPassword(password, admin))
+    ) {
+      return res.status(401).json({ error: "Giriş bilgileri geçersiz." });
+    }
+
+    await new Promise((resolve, reject) => {
+      req.session.regenerate(err => err ? reject(err) : resolve());
+    });
+
+    req.session.user = {
+      username: admin.username,
+      role: "admin"
+    };
+
+    await new Promise((resolve, reject) => {
+      req.session.save(err => err ? reject(err) : resolve());
+    });
+
+    loginAttempts.delete(ip);
+
+    res.json({
+      authenticated: true,
+      username: admin.username
+    });
+  } catch (error) {
+    console.error("Authentication error:", error.message);
+    res.status(500).json({ error: "Kimlik doğrulama başarısız." });
+  }
+});
+
+app.get("/api/auth/me", (req, res) => {
+  if (!req.session?.user) {
+    return res.status(401).json({ authenticated: false });
+  }
+
+  res.json({
+    authenticated: true,
+    username: req.session.user.username,
+    role: req.session.user.role
+  });
+});
+
+app.post("/api/auth/logout", (req, res) => {
+  if (!req.session) {
+    return res.json({ authenticated: false });
+  }
+
+  req.session.destroy(error => {
+    if (error) {
+      return res.status(500).json({ error: "Oturum kapatılamadı." });
+    }
+
+    res.clearCookie("sethelion.sid", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      path: "/"
+    });
+
+    res.json({ authenticated: false });
+  });
+});
+
+// Protect all remaining API routes
+app.use("/api", (req, res, next) => {
+  if (req.session?.user?.role !== "admin") {
+    return res.status(401).json({ error: "Authentication required." });
+  }
+  next();
+});
+
 
 app.get("/api/wallet", async (req, res) => {
   try {
@@ -90,7 +250,7 @@ app.get("/api/tokens", async (req, res) => {
 });
 
 
-app.use(express.json({ limit: "10kb" }));
+
 
 function parseSolToLamports(amount) {
   const value = amount.trim();

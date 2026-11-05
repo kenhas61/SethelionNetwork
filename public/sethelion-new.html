@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080808">
+<meta name="description" content="SETHELION — Beyond Wealth, Beyond Borders. A new vision for digital finance.">
+<title>SETHELION — Beyond Wealth</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+ --bg:#080808;
+ --gold:#c9a76c;
+ --gold2:#ead4a5;
+ --white:#f5f1e9;
+ --muted:#99948a;
+ --line:#ffffff18;
+ --font:'Manrope',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:85px}
+body{background:var(--bg);color:var(--white);font-family:var(--font);overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{font:inherit}
+::selection{background:var(--gold);color:#080808}
+.cursor-glow{position:fixed;width:350px;height:350px;border-radius:50%;background:#c9a76c09;filter:blur(55px);pointer-events:none;z-index:0;transform:translate(-50%,-50%)}
+header{height:82px;position:fixed;top:0;left:0;width:100%;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:0 7%;border-bottom:1px solid transparent;transition:.3s}
+header.scrolled{background:#080808eF;backdrop-filter:blur(20px);border-color:var(--line)}
+.logo{font-size:19px;font-weight:800;letter-spacing:4px}
+.logo span{display:block;font-size:8px;letter-spacing:5px;color:var(--gold);margin-top:4px}
+nav{display:flex;gap:35px;align-items:center}
+nav a{font-size:11px;color:#aaa69c;letter-spacing:1px;transition:.3s}
+nav a:hover{color:var(--gold)}
+.nav-cta,.gold-btn{background:var(--gold);color:#090909;padding:13px 22px;font-size:10px;font-weight:800;letter-spacing:1.5px;border:1px solid var(--gold);transition:.3s}
+.nav-cta:hover,.gold-btn:hover{background:var(--gold2);transform:translateY(-3px)}
+.menu{display:none;background:none;border:0;color:var(--gold);font-size:26px}
+section{position:relative;padding:130px 8%;overflow:hidden}
+.hero{min-height:100svh;display:flex;align-items:center;padding-top:130px}
+.hero:before{content:"";position:absolute;width:750px;height:750px;right:-170px;top:5%;border-radius:50%;background:radial-gradient(circle,#c9a76c15,transparent 68%);pointer-events:none}
+.hero-inner{max-width:750px;position:relative;z-index:2}
+.eyebrow{font-size:10px;letter-spacing:5px;color:var(--gold);font-weight:700;margin-bottom:30px}
+h1{font-size:clamp(58px,9.3vw,125px);line-height:.99;letter-spacing:-7px;font-weight:500}
+h1 span,.gold-text{color:var(--gold)}
+.hero-copy{max-width:450px;color:#a9a49b;font-size:15px;line-height:1.9;margin:35px 0}
+.hero-actions{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.outline-btn{padding:13px 22px;border:1px solid #ffffff35;font-size:10px;letter-spacing:1.5px;transition:.3s}
+.outline-btn:hover{border-color:var(--gold);color:var(--gold)}
+.hero-orb{position:absolute;width:min(42vw,520px);height:min(42vw,520px);right:8%;top:50%;transform:translateY(-45%);border-radius:50%;background:radial-gradient(circle at 34% 28%,#fff4cf 0,#d9b979 3%,#99723c 12%,#34291b 32%,#11100d 62%,#080808 72%);box-shadow:inset -30px -30px 70px #000,0 0 100px #c9a76c20;animation:float 7s ease-in-out infinite}
+.hero-orb:before,.hero-orb:after{content:"";position:absolute;inset:-10%;border:1px solid #c9a76c50;border-radius:50%;transform:rotate(-25deg) scaleY(.35);animation:orbit 18s linear infinite}
+.hero-orb:after{inset:-20%;transform:rotate(55deg) scaleY(.3);animation-duration:24s;border-color:#c9a76c25}
+@keyframes float{50%{transform:translateY(-53%)}}
+@keyframes orbit{to{transform:rotate(335deg) scaleY(.35)}}
+.hero-bottom{position:absolute;bottom:35px;left:8%;right:8%;display:flex;justify-content:space-between;color:#716c63;font-size:9px;letter-spacing:2px}
+.scroll-line{width:65px;height:1px;background:var(--gold);display:inline-block;vertical-align:middle;margin-right:12px}
+.ticker{border-block:1px solid var(--line);padding:23px 0;overflow:hidden;white-space:nowrap}
+.ticker-track{display:inline-flex;gap:65px;animation:ticker 30s linear infinite}
+.ticker span{font-size:11px;letter-spacing:4px;color:#8c8578}
+.ticker b{color:var(--gold);font-weight:500}
+@keyframes ticker{to{transform:translateX(-50%)}}
+.section-label{font-size:10px;letter-spacing:5px;color:var(--gold);margin-bottom:25px}
+h2{font-size:clamp(38px,6vw,76px);font-weight:400;letter-spacing:-3px;line-height:1.1}
+.intro{display:grid;grid-template-columns:1.1fr .9fr;gap:10%;align-items:end}
+.intro p{color:#99948a;line-height:2;font-size:14px;max-width:430px}
+.ecosystem{background:linear-gradient(180deg,#080808,#100e0a 50%,#080808)}
+.eco-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:65px;gap:30px}
+.eco-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.eco-card{min-height:300px;padding:30px;border:1px solid var(--line);background:linear-gradient(145deg,#171510,#0c0b09);position:relative;overflow:hidden;transition:.5s}
+.eco-card:hover{transform:translateY(-8px);border-color:#c9a76c80}
+.eco-number{font-size:10px;letter-spacing:3px;color:var(--gold)}
+.eco-icon{font-size:38px;color:var(--gold);margin:45px 0 24px}
+.eco-card h3{font-size:21px;font-weight:500;margin-bottom:12px}
+.eco-card p{font-size:12px;color:#918b80;line-height:1.8;max-width:260px}
+.eco-card:after{content:"";position:absolute;width:160px;height:160px;border:1px solid #c9a76c20;border-radius:50%;right:-75px;bottom:-75px}
+.manifesto{min-height:620px;display:flex;align-items:center;text-align:center;justify-content:center;background:radial-gradient(ellipse at center,#30281950,transparent 65%)}
+.manifesto-content{max-width:1000px}
+.manifesto h2{font-size:clamp(48px,8vw,105px);letter-spacing:-5px}
+.manifesto p{color:#aaa49a;font-size:14px;line-height:2;max-width:540px;margin:35px auto}
+.manifesto .gold-btn{display:inline-block}
+.vision{display:grid;grid-template-columns:1fr 1fr;gap:10%;align-items:center}
+.vision-art{min-height:440px;position:relative;display:grid;place-items:center;background:radial-gradient(circle,#c9a76c20,transparent 65%)}
+.vision-art .ring{width:260px;height:260px;border:1px solid #c9a76c80;border-radius:50%;display:grid;place-items:center;box-shadow:0 0 80px #c9a76c12,inset 0 0 60px #c9a76c12}
+.vision-art .ring:before{content:"S";font-size:150px;font-weight:300;color:var(--gold);text-shadow:0 0 60px #c9a76c50}
+.vision-art .ring:after{content:"";position:absolute;width:340px;height:120px;border:1px solid #c9a76c60;border-radius:50%;transform:rotate(-35deg)}
+.vision-copy p{color:#99948a;line-height:2;font-size:14px;margin:25px 0}
+.vision-points{display:grid;gap:15px;margin-top:35px}
+.vision-points div{border-top:1px solid var(--line);padding-top:15px;font-size:11px;letter-spacing:2px;color:#d6c8a8}
+.contact{padding-bottom:80px}
+.contact-box{border:1px solid #c9a76c55;padding:75px 8%;text-align:center;background:radial-gradient(ellipse at center,#c9a76c13,transparent 70%)}
+.contact-box h2{margin-bottom:25px}
+.contact-box p{color:#9b958b;font-size:13px;margin-bottom:32px}
+footer{padding:35px 8%;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;color:#79746a;font-size:9px;letter-spacing:2px}
+footer strong{color:var(--gold)}
+.reveal{opacity:0;transform:translateY(35px);transition:opacity .9s,transform .9s}
+.reveal.visible{opacity:1;transform:translateY(0)}
+@media(max-width:850px){
+ header{padding:0 6%}
+ nav{display:none;position:absolute;top:81px;left:0;width:100%;background:#0b0b0b;padding:30px;flex-direction:column;align-items:flex-start;gap:25px;border-bottom:1px solid var(--line)}
+ nav.open{display:flex}
+ .menu{display:block}
+ .hero{min-height:850px;align-items:flex-start;padding-top:180px}
+ .hero-orb{width:280px;height:280px;top:auto;bottom:65px;right:12%;transform:none}
+ .hero-inner{width:100%}
+ h1{letter-spacing:-4px}
+ .hero-bottom{bottom:20px}
+ .intro,.vision{grid-template-columns:1fr;gap:35px}
+ .eco-grid{grid-template-columns:1fr 1fr}
+ .eco-head{align-items:flex-start;flex-direction:column}
+ section{padding:100px 7%}
+ .vision-art{min-height:350px}
+}
+@media(max-width:520px){
+ .eco-grid{grid-template-columns:1fr}
+ .eco-card{min-height:250px}
+ .hero{min-height:820px}
+ .hero-orb{width:230px;height:230px;bottom:80px}
+ .hero-bottom{font-size:7px}
+ .contact-box{padding:55px 20px}
+ footer{font-size:8px}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+ .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+<div class="cursor-glow" id="glow"></div>
+<header id="header">
+ <a class="logo" href="#">SETHELION<span>NETWORK</span></a>
+ <nav id="nav">
+  <a href="#vision">VISION</a>
+  <a href="#ecosystem">ECOSYSTEM</a>
+  <a href="#manifesto">OUR PHILOSOPHY</a>
+  <a href="#contact">CONTACT</a>
+  <a class="nav-cta" href="/app.html">ENTER WALLET ↗</a>
+ </nav>
+ <button class="menu" id="menu" aria-label="Toggle navigation">☰</button>
+</header>
+
+<main>
+<section class="hero">
+ <div class="hero-inner">
+  <div class="eyebrow">THE NEXT DIMENSION OF DIGITAL FINANCE</div>
+  <h1>BEYOND<br><span>WEALTH.</span><br>BEYOND<br>BORDERS.</h1>
+  <p class="hero-copy">A new perspective on digital assets. A connected ecosystem. A vision without borders. Welcome to Sethelion.</p>
+  <div class="hero-actions">
+   <a class="gold-btn" href="#ecosystem">DISCOVER SETHELION ↗</a>
+   <a class="outline-btn" href="#vision">EXPLORE OUR VISION</a>
+  </div>
+ </div>
+ <div class="hero-orb" aria-hidden="true"></div>
+ <div class="hero-bottom"><span><i class="scroll-line"></i>SCROLL TO EXPLORE</span><span>EST. 2026 · DIGITAL FINANCE</span></div>
+</section>
+
+<div class="ticker"><div class="ticker-track">
+ <span>SETHELION <b>✳</b></span><span>BEYOND WEALTH <b>✳</b></span><span>BEYOND BORDERS <b>✳</b></span><span>THE FUTURE IS CONNECTED <b>✳</b></span>
+ <span>SETHELION <b>✳</b></span><span>BEYOND WEALTH <b>✳</b></span><span>BEYOND BORDERS <b>✳</b></span><span>THE FUTURE IS CONNECTED <b>✳</b></span>
+</div></div>
+
+<section id="vision">
+ <div class="intro reveal">
+  <div><div class="section-label">01 / THE VISION</div><h2>A different way<br>to see <span class="gold-text">value.</span></h2></div>
+  <p>Sethelion is a vision for a more connected digital financial world. We bring together technology, accessibility and a forward-looking ecosystem — built around the possibilities of blockchain.</p>
+ </div>
+</section>
+
+<section class="ecosystem" id="ecosystem">
+ <div class="eco-head reveal">
+  <div><div class="section-label">02 / THE ECOSYSTEM</div><h2>One vision.<br><span class="gold-text">Many dimensions.</span></h2></div>
+  <p style="color:#99948a;font-size:12px;line-height:2;max-width:300px">Explore the foundations of the Sethelion digital ecosystem.</p>
+ </div>
+ <div class="eco-grid">
+  <article class="eco-card reveal"><div class="eco-number">01 — DIGITAL ASSETS</div><div class="eco-icon">◈</div><h3>Digital Assets</h3><p>A new way to explore and interact with blockchain-based assets.</p></article>
+  <article class="eco-card reveal"><div class="eco-number">02 — WALLET</div><div class="eco-icon">⬡</div><h3>Sethelion Wallet</h3><p>A connected interface for exploring your digital asset experience.</p></article>
+  <article class="eco-card reveal"><div class="eco-number">03 — NETWORK</div><div class="eco-icon">⌘</div><h3>Network</h3><p>Discover the infrastructure and connections behind the ecosystem.</p></article>
+  <article class="eco-card reveal"><div class="eco-number">04 — EXCHANGE</div><div class="eco-icon">⇄</div><h3>Exchange</h3><p>A vision for accessible digital asset interaction and exchange.</p></article>
+  <article class="eco-card reveal"><div class="eco-number">05 — SECURITY</div><div class="eco-icon">◇</div><h3>Security</h3><p>Security-conscious design and transparent digital experiences.</p></article>
+  <article class="eco-card reveal"><div class="eco-number">06 — INNOVATION</div><div class="eco-icon">✳</div><h3>Innovation</h3><p>Continuously exploring what connected financial technology can become.</p></article>
+ </div>
+</section>
+
+<section class="manifesto" id="manifesto">
+ <div class="manifesto-content reveal">
+  <div class="section-label">03 / OUR PHILOSOPHY</div>
+  <h2>THE FUTURE<br>HAS <span class="gold-text">NO BORDERS.</span></h2>
+  <p>Not just another digital experience. A different perspective on how technology can connect people, assets and possibilities.</p>
+  <a href="#contact" class="gold-btn">DISCOVER THE VISION ↗</a>
+ </div>
+</section>
+
+<section class="vision">
+ <div class="vision-art reveal"><div class="ring"></div></div>
+ <div class="vision-copy reveal">
+  <div class="section-label">04 / THE SETHELION STANDARD</div>
+  <h2>Designed for<br>what comes <span class="gold-text">next.</span></h2>
+  <p>We believe the next chapter of digital finance should feel clear, connected and accessible. Sethelion is built around that ambition.</p>
+  <div class="vision-points">
+   <div>01 — CLARITY THROUGH DESIGN</div>
+   <div>02 — TECHNOLOGY WITH PURPOSE</div>
+   <div>03 — A CONNECTED DIGITAL WORLD</div>
+  </div>
+ </div>
+</section>
+
+<section class="contact" id="contact">
+ <div class="contact-box reveal">
+  <div class="section-label">THE NEXT CHAPTER STARTS HERE</div>
+  <h2>WELCOME TO <span class="gold-text">SETHELION.</span></h2>
+  <p>Explore the ecosystem and discover a new perspective on digital finance.</p>
+  <a href="/app.html" class="gold-btn">ENTER SETHELION WALLET ↗</a>
+ </div>
+</section>
+</main>
+
+<footer>
+ <div><strong>SETHELION</strong> NETWORK</div>
+ <div>BEYOND WEALTH · BEYOND BORDERS</div>
+ <div>© 2026 SETHELION</div>
+</footer>
+
+<script>
+const header=document.getElementById('header');
+const nav=document.getElementById('nav');
+const menu=document.getElementById('menu');
+window.addEventListener('scroll',()=>{
+ header.classList.toggle('scrolled',window.scrollY>35);
+},{passive:true});
+menu.addEventListener('click',()=>nav.classList.toggle('open'));
+nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>nav.classList.remove('open')));
+const observer=new IntersectionObserver(entries=>{
+ entries.forEach(entry=>{
+  if(entry.isIntersecting){
+   entry.target.classList.add('visible');
+   observer.unobserve(entry.target);
+  }
+ });
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+const glow=document.getElementById('glow');
+if(matchMedia('(pointer:fine)').matches){
+ document.addEventListener('pointermove',e=>{
+  glow.style.left=e.clientX+'px';
+  glow.style.top=e.clientY+'px';
+ });
+}else{glow.remove()}
+</script>
+</body>
+</html>

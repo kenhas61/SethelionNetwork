@@ -1,5 +1,5 @@
 
-const CACHE = "sethelion-shell-v1";
+const CACHE = "sethelion-shell-v10";
 const SHELL = [
   "/",
   "/manifest.webmanifest",

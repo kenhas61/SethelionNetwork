@@ -54,3 +54,23 @@ transfer-safety-review-*/
 public/*.before-*
 public/*.pre-*
 wallet-server.cjs.before-*
+
+# Sethelion authentication secrets and sessions
+private/
+sethelion-sessions.db
+sethelion-sessions.db-shm
+sethelion-sessions.db-wal
+*.pre-session
+
+# Sethelion sensitive data and local backups
+data/
+*.db
+*.db-shm
+*.db-wal
+*.before-*
+*.recovery-*
+*.emergency-backup-*
+*.obsidian-backup-*
+*.platinum-backup-*
+*.pre-auth
+*.pre-session
